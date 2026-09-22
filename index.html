@@ -60,7 +60,6 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
 }
 @keyframes starsTwinkle { 0%,100%{opacity:0.7} 50%{opacity:1} }
 
-/* ============= SCREENS ============= */
 .screens { flex: 1; min-height: 0; position: relative; z-index: 1; }
 .screen {
     position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden;
@@ -98,7 +97,6 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
 .icon-btn:active { transform: scale(0.94); background: rgba(255,255,255,0.08); }
 .icon-btn svg { width: 16px; height: 16px; }
 
-/* ============= SCREEN HEADER ============= */
 .screen-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-top: 8px; }
 .screen-header h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg, #fff 40%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
 .screen-header .badge { padding: 5px 11px; border-radius: 12px; background: rgba(212, 175, 55, 0.10); border: 1px solid rgba(212, 175, 55, 0.28); color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: 0.5px; }
@@ -115,7 +113,7 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
 @keyframes shimmer { 0%,60%{transform:translateX(-120%)} 100%{transform:translateX(120%)} }
 @keyframes floatBlob { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-14px,10px) scale(1.08)} }
 .balance-label { font-size: 10.5px; color: var(--text-secondary); letter-spacing: 1.6px; text-transform: uppercase; font-weight: 700; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; }
-.balance-label .flag-mini { width: 20px; height: 15px; border-radius: 3px; box-shadow: 0 1px 4px rgba(0,0,0,0.4); cursor: pointer; font-size: 14px; line-height: 1; }
+.balance-label .flag-mini { width: 22px; height: 22px; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.4); cursor: pointer; font-size: 15px; line-height: 22px; text-align: center; background: rgba(0,0,0,0.3); }
 .balance-value { font-size: 30px; font-weight: 800; margin-top: 10px; letter-spacing: -0.9px; font-variant-numeric: tabular-nums; display: flex; align-items: baseline; gap: 8px; position: relative; z-index: 1; text-shadow: 0 2px 16px rgba(212, 175, 55, 0.25); }
 .balance-value .unit { font-size: 12px; color: var(--gold); font-weight: 800; letter-spacing: 1.2px; }
 .balance-change { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: #4ade80; margin-top: 8px; font-weight: 700; letter-spacing: 0.3px; position: relative; z-index: 1; }
@@ -125,7 +123,7 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
 .balance-sub-item .val { font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--text-primary); }
 .balance-sub-item .val.gold { color: var(--gold-soft); }
 
-/* ============= MINING STAGE (HERO) ============= */
+/* ============= HERO MINING STAGE ============= */
 .hero { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 26px 0 20px; position: relative; }
 .mining-stage { position: relative; width: 260px; height: 260px; display: flex; align-items: center; justify-content: center; }
 .orbit { position: absolute; border-radius: 50%; border: 1px solid rgba(212, 175, 55, 0.12); pointer-events: none; }
@@ -162,14 +160,7 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
 
 /* ============= STATS GRID ============= */
 .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-bottom: 12px; position: relative; z-index: 2; }
-.stat-card {
-    background: var(--bg-panel); border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md); padding: 14px 16px;
-    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-    position: relative; overflow: hidden;
-    transition: border-color 0.25s ease, transform 0.15s ease;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
-}
+.stat-card { background: var(--bg-panel); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 14px 16px; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); position: relative; overflow: hidden; transition: border-color 0.25s ease, transform 0.15s ease; box-shadow: inset 0 1px 0 rgba(255,255,255,0.04); }
 .stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--card-accent, rgba(212,175,55,0.5)), transparent); }
 .stat-card:active { transform: scale(0.98); border-color: rgba(212, 175, 55, 0.35); }
 .stat-header { display: flex; justify-content: space-between; align-items: center; font-size: 9.5px; color: var(--text-muted); letter-spacing: 1.4px; text-transform: uppercase; font-weight: 700; }
@@ -184,14 +175,7 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
 /* ============= BUTTONS ============= */
 .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; position: relative; z-index: 2; }
 .actions.single { grid-template-columns: 1fr; }
-.btn {
-    border: none; outline: none; padding: 15px 0; border-radius: var(--radius-md);
-    font-weight: 800; font-size: 12px; letter-spacing: 1.1px; cursor: pointer;
-    transition: transform 0.12s ease, box-shadow 0.2s ease, filter 0.2s;
-    color: var(--text-primary); text-transform: uppercase;
-    display: flex; align-items: center; justify-content: center; gap: 7px;
-    position: relative; overflow: hidden;
-}
+.btn { border: none; outline: none; padding: 15px 0; border-radius: var(--radius-md); font-weight: 800; font-size: 12px; letter-spacing: 1.1px; cursor: pointer; transition: transform 0.12s ease, box-shadow 0.2s ease, filter 0.2s; color: var(--text-primary); text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 7px; position: relative; overflow: hidden; }
 .btn::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.22) 50%, transparent 60%); transform: translateX(-100%); transition: transform 0.6s ease; }
 .btn:not(:disabled):hover::after { transform: translateX(100%); }
 .btn:active { transform: scale(0.97); }
@@ -199,34 +183,19 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
 .btn-primary { background: linear-gradient(135deg, #f0d57a 0%, #d4af37 50%, #a3841f 100%); color: #0a1428; box-shadow: 0 6px 22px rgba(212, 175, 55, 0.30), inset 0 1px 0 rgba(255,255,255,0.35); }
 .btn-secondary { background: rgba(255, 255, 255, 0.055); border: 1px solid rgba(255, 255, 255, 0.09); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); }
 .btn-secondary:active { background: rgba(255, 255, 255, 0.09); }
-.btn-danger { background: rgba(231, 76, 60, 0.12); border: 1px solid rgba(231, 76, 60, 0.32); color: #ff6b5b; }
 .btn-sm { padding: 9px 14px; font-size: 10.5px; border-radius: 10px; letter-spacing: 0.7px; }
 .btn-full { grid-column: 1/-1; }
 
 /* ============= BOTTOM NAV ============= */
-.bottom-nav {
-    display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px;
-    padding: 9px 4px calc(9px + env(safe-area-inset-bottom));
-    background: rgba(8, 16, 32, 0.94);
-    backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-    position: relative; z-index: 10;
-    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.4);
-}
+.bottom-nav { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; padding: 9px 4px calc(9px + env(safe-area-inset-bottom)); background: rgba(8, 16, 32, 0.94); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-top: 1px solid rgba(255, 255, 255, 0.05); position: relative; z-index: 10; box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.4); }
 .bottom-nav::before { content: ''; position: absolute; top: -1px; left: 15%; right: 15%; height: 1px; background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent); }
-.nav-item {
-    display: flex; flex-direction: column; align-items: center; gap: 3px;
-    padding: 7px 0; background: none; border: none;
-    color: var(--text-muted); font-size: 8.5px; font-weight: 700;
-    letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer;
-    transition: color 0.2s, background 0.25s; border-radius: 10px; position: relative;
-}
+.nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 7px 0; background: none; border: none; color: var(--text-muted); font-size: 8.5px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; transition: color 0.2s, background 0.25s; border-radius: 10px; position: relative; }
 .nav-item svg { width: 19px; height: 19px; transition: filter 0.25s; }
 .nav-item.active { color: var(--gold-soft); background: linear-gradient(180deg, rgba(212, 175, 55, 0.09), rgba(212, 175, 55, 0.02)); }
 .nav-item.active svg { filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.6)); }
 .nav-item.active::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 20px; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); border-radius: 2px; }
 
-/* ============= AGENT CARDS ============= */
+/* ============= AGENT CARDS (AI SVG AVATARS) ============= */
 .agent-list, .shop-list, .history-list { display: flex; flex-direction: column; gap: 11px; }
 .agent-card {
     background: var(--bg-panel); border: 1px solid var(--border-subtle);
@@ -239,17 +208,34 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
 .agent-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--tier-color, var(--gold)); box-shadow: 0 0 12px var(--tier-color, var(--gold)); }
 .agent-card::after { content: ''; position: absolute; top: -40%; right: -15%; width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle, var(--tier-color-alpha, rgba(212,175,55,0.12)) 0%, transparent 70%); pointer-events: none; }
 .agent-card:active { transform: scale(0.985); }
+
+/* AI Agent SVG avatar */
 .agent-avatar {
-    width: 48px; height: 48px; border-radius: 14px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-    border: 1px solid var(--tier-color-alpha, rgba(212,175,55,0.25));
+    width: 52px; height: 52px; border-radius: 14px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(0,0,0,0.4));
+    border: 1px solid var(--tier-color, var(--gold));
     display: flex; align-items: center; justify-content: center;
-    font-size: 24px; flex-shrink: 0;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 12px rgba(0,0,0,0.3);
+    flex-shrink: 0;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 12px rgba(0,0,0,0.3), 0 0 20px var(--tier-color-alpha, rgba(212,175,55,0.15));
     position: relative; z-index: 1;
+    overflow: hidden;
 }
-.agent-avatar::after { content: ''; position: absolute; inset: -2px; border-radius: 14px; border: 1px solid var(--tier-color, var(--gold)); opacity: 0.35; animation: avatarPulse 2.5s ease-in-out infinite; }
-@keyframes avatarPulse { 0%,100%{opacity:0.35;transform:scale(1)} 50%{opacity:0.15;transform:scale(1.06)} }
+.agent-avatar::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 20%, var(--tier-color-alpha, rgba(212,175,55,0.18)) 0%, transparent 60%);
+    pointer-events: none;
+}
+.agent-avatar svg {
+    width: 100%; height: 100%;
+    position: relative; z-index: 1;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5));
+    animation: avatarFloat 3.5s ease-in-out infinite;
+}
+@keyframes avatarFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
+}
+
 .agent-info { flex: 1; min-width: 0; position: relative; z-index: 1; }
 .agent-name { font-size: 13.5px; font-weight: 800; display: flex; align-items: center; gap: 7px; letter-spacing: -0.1px; }
 .agent-level { font-size: 9px; padding: 2.5px 7px; border-radius: 5px; background: linear-gradient(135deg, var(--tier-color, var(--gold)), color-mix(in srgb, var(--tier-color, var(--gold)) 60%, black)); color: #0a1428; font-weight: 800; letter-spacing: 0.6px; }
@@ -276,21 +262,18 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
 .shop-info { flex: 1; position: relative; z-index: 1; }
 .shop-name { font-size: 13.5px; font-weight: 800; display: flex; align-items: center; gap: 7px; }
 .shop-desc { font-size: 10.5px; color: var(--text-muted); margin-top: 4px; font-weight: 500; letter-spacing: 0.2px; }
+.shop-owned-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 9px; padding: 3px 8px; border-radius: 6px;
+    background: rgba(46, 204, 113, 0.12); border: 1px solid rgba(46, 204, 113, 0.3);
+    color: #4ade80; font-weight: 800; letter-spacing: 0.6px;
+    margin-left: 6px;
+}
 
 /* ============= HISTORY ============= */
-.history-item {
-    background: var(--bg-panel); border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md); padding: 13px 15px;
-    display: flex; align-items: center; gap: 13px;
-    backdrop-filter: blur(12px); position: relative; overflow: hidden;
-    animation: slideIn 0.35s ease backwards;
-}
+.history-item { background: var(--bg-panel); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 13px 15px; display: flex; align-items: center; gap: 13px; backdrop-filter: blur(12px); position: relative; overflow: hidden; animation: slideIn 0.35s ease backwards; }
 @keyframes slideIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-.history-icon {
-    width: 40px; height: 40px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 17px; flex-shrink: 0; font-weight: 700; border: 1px solid transparent;
-}
+.history-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; font-weight: 700; border: 1px solid transparent; }
 .history-icon.sell { background: linear-gradient(135deg, rgba(46,204,113,0.15), rgba(46,204,113,0.04)); color: var(--success); border-color: rgba(46,204,113,0.2); }
 .history-icon.upgrade { background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.04)); color: var(--gold); border-color: rgba(212,175,55,0.2); }
 .history-icon.buy { background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.04)); color: var(--blue); border-color: rgba(59,130,246,0.2); }
@@ -306,18 +289,63 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
 .history-amount.negative { color: #ff6b5b; }
 .history-amount.neutral { color: var(--text-primary); }
 
-/* ============= REFERRAL ============= */
+/* ============= REFERRAL (GIFT BOX FIXED) ============= */
 .ref-hero {
-    background: linear-gradient(135deg, rgba(212, 175, 55, 0.16) 0%, rgba(212, 175, 55, 0.02) 60%, rgba(255,255,255,0.02) 100%);
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.16) 0%, rgba(212, 175, 55, 0.03) 60%, rgba(255,255,255,0.02) 100%);
     border: 1px solid var(--border-accent); border-radius: var(--radius-lg);
-    padding: 22px; margin-bottom: 14px; position: relative; overflow: hidden;
+    padding: 24px 22px; margin-bottom: 14px;
+    position: relative; overflow: hidden;
     box-shadow: 0 12px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
+    display: flex; flex-direction: column; gap: 10px;
 }
-.ref-hero::after { content: ''; position: absolute; top: -40%; right: -20%; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(212, 175, 55, 0.22) 0%, transparent 70%); animation: floatBlob 7s ease-in-out infinite; pointer-events: none; }
-.ref-hero::before { content: '🎁'; position: absolute; top: 14px; right: 18px; font-size: 34px; opacity: 0.35; transform: rotate(-12deg); }
-.ref-hero h2 { font-size: 16px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.2px; position: relative; z-index: 1; }
-.ref-hero p { font-size: 12px; color: var(--text-secondary); line-height: 1.65; position: relative; z-index: 1; }
+.ref-hero::after {
+    content: ''; position: absolute; top: -40%; right: -20%;
+    width: 240px; height: 240px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.24) 0%, transparent 70%);
+    animation: floatBlob 7s ease-in-out infinite; pointer-events: none;
+}
+/* Gift box — sağ üstte, hafif eğik, parlayan */
+.ref-hero .gift-box {
+    position: absolute; top: 16px; right: 18px;
+    width: 56px; height: 56px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 44px; line-height: 1;
+    animation: giftFloat 3.2s ease-in-out infinite;
+    filter: drop-shadow(0 6px 12px rgba(0,0,0,0.5));
+    z-index: 2;
+    transform: rotate(-10deg);
+    transform-origin: center;
+    pointer-events: none;
+}
+.ref-hero .gift-box::before {
+    content: '';
+    position: absolute; inset: -10px;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.35) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: giftGlow 2.5s ease-in-out infinite;
+    z-index: -1;
+}
+@keyframes giftFloat {
+    0%, 100% { transform: translateY(0) rotate(-10deg) scale(1); }
+    50% { transform: translateY(-6px) rotate(-6deg) scale(1.05); }
+}
+@keyframes giftGlow {
+    0%, 100% { opacity: 0.5; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.15); }
+}
+
+.ref-hero h2 {
+    font-size: 17px; font-weight: 800; margin: 0;
+    letter-spacing: -0.3px; position: relative; z-index: 1;
+    padding-right: 70px; /* gift box için boşluk */
+}
+.ref-hero p {
+    font-size: 12px; color: var(--text-secondary);
+    line-height: 1.65; position: relative; z-index: 1;
+    padding-right: 70px;
+}
 .ref-hero strong { color: var(--gold-soft); font-weight: 800; }
+
 .ref-code {
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
     font-size: 28px; font-weight: 800; letter-spacing: 5px;
@@ -346,21 +374,14 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
 .balance-row .label { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
 .balance-row .amount { font-size: 20px; font-weight: 800; color: var(--gold-soft); font-variant-numeric: tabular-nums; }
 .balance-row .amount small { font-size: 11px; color: var(--text-muted); margin-left: 4px; font-weight: 600; }
-
 .deposit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
-.deposit-tier {
-    background: var(--bg-panel); border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md); padding: 16px 12px; text-align: center;
-    cursor: pointer; transition: transform 0.15s, border-color 0.2s, background 0.2s;
-    position: relative; overflow: hidden;
-}
+.deposit-tier { background: var(--bg-panel); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px 12px; text-align: center; cursor: pointer; transition: transform 0.15s, border-color 0.2s, background 0.2s; position: relative; overflow: hidden; }
 .deposit-tier::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(212,175,55,0.12), transparent 60%); opacity: 0; transition: opacity 0.2s; }
 .deposit-tier:active { transform: scale(0.97); }
 .deposit-tier:active::before { opacity: 1; }
 .deposit-tier .usd { font-size: 22px; font-weight: 800; color: var(--gold-soft); letter-spacing: -0.5px; }
 .deposit-tier .stars { font-size: 10.5px; color: var(--text-muted); margin-top: 4px; font-weight: 600; }
 .deposit-tier .tier-label { font-size: 9px; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 800; margin-top: 8px; }
-
 .settings-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--bg-panel); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); cursor: pointer; margin-bottom: 10px; transition: background 0.2s, border-color 0.2s, transform 0.1s; }
 .settings-item:active { transform: scale(0.985); border-color: rgba(212,175,55,0.3); }
 .settings-item .s-icon { width: 38px; height: 38px; border-radius: 11px; background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.04)); border: 1px solid rgba(212,175,55,0.2); display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
@@ -370,12 +391,10 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
 .settings-item .s-value { font-size: 12px; color: var(--gold-soft); font-weight: 700; display: flex; align-items: center; gap: 6px; }
 .settings-item .s-arrow { color: var(--text-muted); font-size: 14px; }
 
-/* ============= EMPTY STATE ============= */
 .empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); font-size: 12px; }
 .empty-state .icon { font-size: 42px; margin-bottom: 14px; opacity: 0.35; }
 .empty-state .title { color: var(--text-secondary); font-weight: 700; font-size: 13px; margin-bottom: 6px; }
 
-/* ============= SECTION TITLE ============= */
 .section-title { font-size: 10.5px; color: var(--text-muted); letter-spacing: 1.6px; text-transform: uppercase; font-weight: 800; margin: 20px 0 11px; display: flex; align-items: center; gap: 8px; }
 .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(212,175,55,0.2), transparent); }
 .section-title:first-child { margin-top: 0; }
@@ -383,15 +402,7 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
 /* ============= MODAL ============= */
 .modal-overlay { position: fixed; inset: 0; background: rgba(5, 10, 20, 0.78); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 24px; z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
 .modal-overlay.show { opacity: 1; pointer-events: auto; }
-.modal {
-    width: 100%; max-width: 350px;
-    background: linear-gradient(180deg, #16294a 0%, #0d1a30 100%);
-    border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 20px;
-    padding: 24px 22px 20px;
-    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255,255,255,0.08);
-    transform: scale(0.88) translateY(14px); transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
-    max-height: 82vh; display: flex; flex-direction: column; position: relative; overflow: hidden;
-}
+.modal { width: 100%; max-width: 350px; background: linear-gradient(180deg, #16294a 0%, #0d1a30 100%); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 20px; padding: 24px 22px 20px; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255,255,255,0.08); transform: scale(0.88) translateY(14px); transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1); max-height: 82vh; display: flex; flex-direction: column; position: relative; overflow: hidden; }
 .modal::before { content: ''; position: absolute; top: -50%; left: -20%; width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, transparent 70%); pointer-events: none; }
 .modal-overlay.show .modal { transform: scale(1) translateY(0); }
 .modal-icon { width: 58px; height: 58px; border-radius: 18px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 26px; background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05)); border: 1px solid rgba(212, 175, 55, 0.3); color: var(--gold-soft); box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2); position: relative; z-index: 1; animation: iconPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
@@ -418,19 +429,7 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
 .lang-item .check { color: var(--gold); font-weight: 800; }
 
 /* ============= TOAST ============= */
-.toast {
-    position: fixed; left: 50%;
-    bottom: calc(95px + env(safe-area-inset-bottom));
-    transform: translateX(-50%) translateY(24px);
-    background: linear-gradient(135deg, rgba(22, 41, 74, 0.98), rgba(13, 26, 48, 0.98));
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    color: var(--text-primary); padding: 11px 20px; border-radius: 13px;
-    font-size: 12px; font-weight: 700; letter-spacing: 0.4px;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    z-index: 1000; box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55);
-    white-space: nowrap; max-width: 90vw; overflow: hidden; text-overflow: ellipsis;
-}
+.toast { position: fixed; left: 50%; bottom: calc(95px + env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(24px); background: linear-gradient(135deg, rgba(22, 41, 74, 0.98), rgba(13, 26, 48, 0.98)); border: 1px solid rgba(212, 175, 55, 0.3); color: var(--text-primary); padding: 11px 20px; border-radius: 13px; font-size: 12px; font-weight: 700; letter-spacing: 0.4px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1000; box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55); white-space: nowrap; max-width: 90vw; overflow: hidden; text-overflow: ellipsis; }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* ============= CONFETTI ============= */
@@ -449,14 +448,12 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading-status { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
 
-/* ============= VALUE FLASH ============= */
 @keyframes valueFlash { 0%{color:var(--gold-soft);transform:scale(1.08)} 100%{color:inherit;transform:scale(1)} }
 .flash { animation: valueFlash 0.5s ease; display: inline-block; }
 </style>
 </head>
 <body>
 
-<!-- SVG Gradient Definitions -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
     <defs>
         <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -471,7 +468,7 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
     </defs>
 </svg>
 
-<!-- ============= LOADING OVERLAY ============= -->
+<!-- ============= LOADING ============= -->
 <div class="loading-overlay" id="loadingOverlay">
     <div class="loading-logo">
         <svg viewBox="0 0 24 24" fill="none">
@@ -488,9 +485,7 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
 <div class="app-container">
     <div class="screens">
 
-        <!-- ============================================= -->
-        <!-- SCREEN 1: DASHBOARD                           -->
-        <!-- ============================================= -->
+        <!-- ========== DASHBOARD ========== -->
         <div class="screen active" id="screen-dashboard">
             <div class="topbar">
                 <div class="brand">
@@ -519,7 +514,6 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
                 </div>
             </div>
 
-            <!-- Balance Card -->
             <div class="balance-card">
                 <div class="balance-label">
                     <span data-i18n="balance_total">Total Balance</span>
@@ -541,12 +535,11 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
                     </div>
                     <div class="balance-sub-item">
                         <span class="lbl" data-i18n="stat_power">Hash Power</span>
-                        <span class="val" id="powerVal">0.00 <small style="font-size:9px;color:var(--text-muted)">TH/s</small></span>
+                        <span class="val gold" id="powerVal">0.00 TH/s</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Mining Stage -->
             <div class="hero">
                 <div class="mining-stage">
                     <div class="glow-pulse"></div>
@@ -565,25 +558,22 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
                             <polygon points="50,8 82,32 50,50" fill="#fff" opacity="0.28"/>
                         </svg>
                         <div class="core-label" data-i18n="timer_next">NEXT</div>
-                        <div class="timer-display" id="timer">00:00:00</div>
+                        <div class="timer-display" id="timer">08:00:00</div>
                     </div>
                 </div>
                 <div class="hex-caption">
-                    <strong id="cycleInfo">12h</strong>
+                    <strong id="cycleInfo">8h</strong>
                     <span data-i18n="timer_cycle">mining cycle</span>
                 </div>
             </div>
 
-            <!-- Stats Grid -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-header">
                         <span data-i18n="stat_rate">Rate / Hour</span>
                         <div class="stat-icon">◆</div>
                     </div>
-                    <div class="stat-value">
-                        <span id="rateVal">0.0000</span>
-                    </div>
+                    <div class="stat-value"><span id="rateVal">0.0000</span></div>
                     <div class="stat-progress"><div class="stat-progress-bar" id="rateBar" style="width:0%"></div></div>
                 </div>
                 <div class="stat-card">
@@ -591,14 +581,11 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
                         <span data-i18n="stat_agents">Agents</span>
                         <div class="stat-icon blue">⚙</div>
                     </div>
-                    <div class="stat-value">
-                        <span id="agentCountDash">0</span>
-                    </div>
+                    <div class="stat-value"><span id="agentCountDash">0</span></div>
                     <div class="stat-progress"><div class="stat-progress-bar blue" id="agentBar" style="width:0%"></div></div>
                 </div>
             </div>
 
-            <!-- Actions -->
             <div class="actions">
                 <button class="btn btn-secondary" onclick="handleSell()">
                     <span>↑</span> <span data-i18n="btn_sell">Sell Token</span>
@@ -609,9 +596,7 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
             </div>
         </div>
 
-        <!-- ============================================= -->
-        <!-- SCREEN 2: AGENTS                              -->
-        <!-- ============================================= -->
+        <!-- ========== AGENTS ========== -->
         <div class="screen" id="screen-agents">
             <div class="screen-header">
                 <h1 data-i18n="screen_agents">Agents</h1>
@@ -623,9 +608,7 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
             <div class="shop-list" id="shopList"></div>
         </div>
 
-        <!-- ============================================= -->
-        <!-- SCREEN 3: HISTORY                             -->
-        <!-- ============================================= -->
+        <!-- ========== HISTORY ========== -->
         <div class="screen" id="screen-history">
             <div class="screen-header">
                 <h1 data-i18n="screen_history">History</h1>
@@ -634,9 +617,7 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
             <div class="history-list" id="historyList"></div>
         </div>
 
-        <!-- ============================================= -->
-        <!-- SCREEN 4: REFERRAL                            -->
-        <!-- ============================================= -->
+        <!-- ========== REFERRAL ========== -->
         <div class="screen" id="screen-referral">
             <div class="screen-header">
                 <h1 data-i18n="screen_referral">Referral</h1>
@@ -644,6 +625,7 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
             </div>
 
             <div class="ref-hero">
+                <div class="gift-box">🎁</div>
                 <h2 data-i18n="ref_title">Invite Friends</h2>
                 <p data-i18n="ref_desc">Earn 3% of every friend's mining income, paid instantly.</p>
             </div>
@@ -687,9 +669,7 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
             <div id="refList"></div>
         </div>
 
-        <!-- ============================================= -->
-        <!-- SCREEN 5: PROFILE                             -->
-        <!-- ============================================= -->
+        <!-- ========== PROFILE ========== -->
         <div class="screen" id="screen-profile">
             <div class="screen-header">
                 <h1 data-i18n="profile_title">Profile</h1>
@@ -706,10 +686,7 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
 
             <div class="balance-row">
                 <div class="label" data-i18n="profile_balance">USD Balance</div>
-                <div class="amount">
-                    <span id="profileUsdBalance">0.0000</span>
-                    <small>USD</small>
-                </div>
+                <div class="amount"><span id="profileUsdBalance">0.0000</span><small>USD</small></div>
             </div>
 
             <div class="actions" style="margin-top:12px;">
@@ -738,7 +715,7 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
 
     </div>
 
-    <!-- ============= BOTTOM NAV ============= -->
+    <!-- ========== BOTTOM NAV ========== -->
     <nav class="bottom-nav">
         <button class="nav-item active" data-screen="dashboard" onclick="showScreen('dashboard')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -782,7 +759,7 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
     </nav>
 </div>
 
-<!-- ============= MODAL ============= -->
+<!-- ========== MODAL ========== -->
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
         <div class="modal-icon" id="modalIcon">✦</div>
@@ -792,12 +769,12 @@ body { background: #000; color: var(--text-primary); display: flex; justify-cont
     </div>
 </div>
 
-<!-- ============= TOAST + CONFETTI ============= -->
 <div class="toast" id="toast"></div>
 <div class="confetti-layer" id="confettiLayer"></div>
+
 <script>
 /* =========================================================================
-   ASTRA MINING v3.3 — Premium UI + Stars Payments + i18n
+   ASTRA MINING v3.5 — Premium UI + AI Agents + Persistent Timer
    ========================================================================= */
 
 const CONFIG = {
@@ -806,11 +783,180 @@ const CONFIG = {
     DEFAULT_LANG: "en",
 };
 
+/* ===== AI AGENT SVG MODELLERİ (weak → strong) ===== */
+const AGENT_SVGS = {
+    starter: `
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="s-body" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#2ecc71" stop-opacity="0.9"/>
+                    <stop offset="100%" stop-color="#1a8049" stop-opacity="1"/>
+                </linearGradient>
+            </defs>
+            <!-- Anten -->
+            <line x1="50" y1="12" x2="50" y2="22" stroke="#2ecc71" stroke-width="2"/>
+            <circle cx="50" cy="10" r="3" fill="#2ecc71"/>
+            <!-- Baş -->
+            <rect x="32" y="22" width="36" height="26" rx="8" fill="url(#s-body)" stroke="#4ade80" stroke-width="1.2"/>
+            <!-- Gözler -->
+            <circle cx="42" cy="35" r="3.5" fill="#0a1428"/>
+            <circle cx="58" cy="35" r="3.5" fill="#0a1428"/>
+            <circle cx="42" cy="35" r="1.5" fill="#4ade80"/>
+            <circle cx="58" cy="35" r="1.5" fill="#4ade80"/>
+            <!-- Gövde -->
+            <rect x="36" y="52" width="28" height="30" rx="6" fill="url(#s-body)" stroke="#4ade80" stroke-width="1.2"/>
+            <!-- Gövde detay -->
+            <rect x="44" y="60" width="12" height="12" rx="2" fill="#0a1428" opacity="0.5"/>
+            <circle cx="50" cy="66" r="2" fill="#4ade80"/>
+            <!-- Kollar -->
+            <rect x="24" y="55" width="10" height="6" rx="3" fill="#1a8049"/>
+            <rect x="66" y="55" width="10" height="6" rx="3" fill="#1a8049"/>
+            <!-- Ayaklar -->
+            <rect x="40" y="82" width="8" height="6" rx="2" fill="#1a8049"/>
+            <rect x="52" y="82" width="8" height="6" rx="2" fill="#1a8049"/>
+        </svg>
+    `,
+    runner: `
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="r-body" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.95"/>
+                    <stop offset="100%" stop-color="#1e40af" stop-opacity="1"/>
+                </linearGradient>
+                <linearGradient id="r-glow" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#60a5fa"/>
+                    <stop offset="100%" stop-color="#3b82f6"/>
+                </linearGradient>
+            </defs>
+            <!-- Enerji antenleri -->
+            <line x1="38" y1="14" x2="34" y2="22" stroke="#60a5fa" stroke-width="1.8"/>
+            <line x1="62" y1="14" x2="66" y2="22" stroke="#60a5fa" stroke-width="1.8"/>
+            <circle cx="38" cy="12" r="2.5" fill="#60a5fa"/>
+            <circle cx="62" cy="12" r="2.5" fill="#60a5fa"/>
+            <!-- Baş (vizörlü) -->
+            <rect x="30" y="22" width="40" height="28" rx="6" fill="url(#r-body)" stroke="#60a5fa" stroke-width="1.3"/>
+            <rect x="35" y="30" width="30" height="12" rx="3" fill="#0a1428"/>
+            <!-- Vizör çizgisi -->
+            <line x1="38" y1="36" x2="62" y2="36" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="50" cy="36" r="2" fill="#60a5fa"/>
+            <!-- Gövde -->
+            <path d="M34 52 L66 52 L64 84 L36 84 Z" fill="url(#r-body)" stroke="#60a5fa" stroke-width="1.3"/>
+            <!-- Göğüs core -->
+            <circle cx="50" cy="66" r="6" fill="#0a1428"/>
+            <circle cx="50" cy="66" r="3" fill="url(#r-glow)"/>
+            <circle cx="50" cy="66" r="1.5" fill="#fff" opacity="0.9"/>
+            <!-- Kollar -->
+            <rect x="20" y="54" width="14" height="8" rx="3" fill="#1e40af" stroke="#60a5fa" stroke-width="0.8"/>
+            <rect x="66" y="54" width="14" height="8" rx="3" fill="#1e40af" stroke="#60a5fa" stroke-width="0.8"/>
+            <!-- Ayaklar -->
+            <rect x="38" y="84" width="10" height="7" rx="2" fill="#1e40af"/>
+            <rect x="52" y="84" width="10" height="7" rx="2" fill="#1e40af"/>
+        </svg>
+    `,
+    pro: `
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="p-body" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#f0d57a" stop-opacity="0.95"/>
+                    <stop offset="100%" stop-color="#a3841f" stop-opacity="1"/>
+                </linearGradient>
+                <radialGradient id="p-core">
+                    <stop offset="0%" stop-color="#fff"/>
+                    <stop offset="40%" stop-color="#f0d57a"/>
+                    <stop offset="100%" stop-color="#d4af37"/>
+                </radialGradient>
+            </defs>
+            <!-- Halo -->
+            <circle cx="50" cy="50" r="44" fill="none" stroke="#d4af37" stroke-width="0.6" opacity="0.3"/>
+            <circle cx="50" cy="50" r="38" fill="none" stroke="#d4af37" stroke-width="0.4" opacity="0.2"/>
+            <!-- Kanatlar (melek tarzı) -->
+            <path d="M18 40 Q10 30 14 20 Q22 28 28 36" fill="#d4af37" opacity="0.35" stroke="#f0d57a" stroke-width="0.8"/>
+            <path d="M82 40 Q90 30 86 20 Q78 28 72 36" fill="#d4af37" opacity="0.35" stroke="#f0d57a" stroke-width="0.8"/>
+            <!-- Baş (yuvarlak, akıllı) -->
+            <circle cx="50" cy="32" r="14" fill="url(#p-body)" stroke="#f0d57a" stroke-width="1.5"/>
+            <!-- Gözler (parlayan) -->
+            <ellipse cx="44" cy="31" rx="2.5" ry="3" fill="#0a1428"/>
+            <ellipse cx="56" cy="31" rx="2.5" ry="3" fill="#0a1428"/>
+            <circle cx="44" cy="31" r="1.2" fill="#f0d57a"/>
+            <circle cx="56" cy="31" r="1.2" fill="#f0d57a"/>
+            <!-- Tac -->
+            <path d="M40 18 L44 22 L50 16 L56 22 L60 18 L58 24 L42 24 Z" fill="#f0d57a" stroke="#8a6d1c" stroke-width="0.6"/>
+            <!-- Gövde -->
+            <rect x="34" y="48" width="32" height="34" rx="8" fill="url(#p-body)" stroke="#f0d57a" stroke-width="1.5"/>
+            <!-- Merkez core -->
+            <circle cx="50" cy="62" r="7" fill="#0a1428"/>
+            <circle cx="50" cy="62" r="4" fill="url(#p-core)"/>
+            <circle cx="50" cy="62" r="2" fill="#fff"/>
+            <!-- Enerji çizgileri -->
+            <line x1="44" y1="72" x2="56" y2="72" stroke="#f0d57a" stroke-width="1" opacity="0.6"/>
+            <line x1="46" y1="76" x2="54" y2="76" stroke="#f0d57a" stroke-width="1" opacity="0.4"/>
+            <!-- Kollar -->
+            <rect x="22" y="52" width="12" height="8" rx="3" fill="#a3841f" stroke="#f0d57a" stroke-width="0.8"/>
+            <rect x="66" y="52" width="12" height="8" rx="3" fill="#a3841f" stroke="#f0d57a" stroke-width="0.8"/>
+            <!-- Ayaklar -->
+            <rect x="40" y="82" width="8" height="6" rx="2" fill="#a3841f"/>
+            <rect x="52" y="82" width="8" height="6" rx="2" fill="#a3841f"/>
+        </svg>
+    `,
+    elite: `
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="e-body" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#e9d5ff" stop-opacity="0.95"/>
+                    <stop offset="50%" stop-color="#a855f7" stop-opacity="1"/>
+                    <stop offset="100%" stop-color="#6b21a8" stop-opacity="1"/>
+                </linearGradient>
+                <radialGradient id="e-core">
+                    <stop offset="0%" stop-color="#fff"/>
+                    <stop offset="30%" stop-color="#e9d5ff"/>
+                    <stop offset="70%" stop-color="#a855f7"/>
+                    <stop offset="100%" stop-color="#6b21a8"/>
+                </radialGradient>
+                <linearGradient id="e-crystal" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#e9d5ff"/>
+                    <stop offset="100%" stop-color="#a855f7"/>
+                </linearGradient>
+            </defs>
+            <!-- Enerji halkaları -->
+            <ellipse cx="50" cy="50" rx="42" ry="14" fill="none" stroke="#a855f7" stroke-width="0.6" opacity="0.4" transform="rotate(-20 50 50)"/>
+            <ellipse cx="50" cy="50" rx="42" ry="14" fill="none" stroke="#e9d5ff" stroke-width="0.6" opacity="0.3" transform="rotate(20 50 50)"/>
+            <!-- Kristal antenler -->
+            <polygon points="50,8 52,16 50,20 48,16" fill="url(#e-crystal)" stroke="#e9d5ff" stroke-width="0.6"/>
+            <polygon points="38,14 40,20 38,24 36,20" fill="url(#e-crystal)" opacity="0.7"/>
+            <polygon points="62,14 64,20 62,24 60,20" fill="url(#e-crystal)" opacity="0.7"/>
+            <!-- Baş (kristal taçlı) -->
+            <circle cx="50" cy="36" r="13" fill="url(#e-body)" stroke="#e9d5ff" stroke-width="1.5"/>
+            <path d="M38 30 L44 26 L50 22 L56 26 L62 30 L60 36 L40 36 Z" fill="#a855f7" opacity="0.4"/>
+            <!-- Gözler -->
+            <circle cx="45" cy="37" r="2.8" fill="#0a1428"/>
+            <circle cx="55" cy="37" r="2.8" fill="#0a1428"/>
+            <circle cx="45" cy="37" r="1.4" fill="#e9d5ff"/>
+            <circle cx="55" cy="37" r="1.4" fill="#e9d5ff"/>
+            <circle cx="45" cy="37" r="0.6" fill="#fff"/>
+            <circle cx="55" cy="37" r="0.6" fill="#fff"/>
+            <!-- Gövde (kristal) -->
+            <path d="M36 52 L50 46 L64 52 L62 86 L38 86 Z" fill="url(#e-body)" stroke="#e9d5ff" stroke-width="1.5"/>
+            <!-- Central crystal core -->
+            <circle cx="50" cy="64" r="8" fill="#0a1428"/>
+            <circle cx="50" cy="64" r="5" fill="url(#e-core)"/>
+            <circle cx="50" cy="64" r="2.5" fill="#fff"/>
+            <!-- Enerji dalgaları -->
+            <circle cx="50" cy="64" r="11" fill="none" stroke="#e9d5ff" stroke-width="0.6" opacity="0.5"/>
+            <!-- Omuz kristalleri -->
+            <polygon points="30,52 34,54 34,62 30,64 26,62 26,54" fill="url(#e-crystal)" opacity="0.8"/>
+            <polygon points="70,52 74,54 74,62 70,64 66,62 66,54" fill="url(#e-crystal)" opacity="0.8"/>
+            <!-- Ayaklar -->
+            <rect x="40" y="86" width="8" height="5" rx="2" fill="#6b21a8"/>
+            <rect x="52" y="86" width="8" height="5" rx="2" fill="#6b21a8"/>
+        </svg>
+    `,
+};
+
 const TIERS = {
-    starter: { name: 'Starter', icon: '🌱', basePower: 5.0,   cost: 0,   color: '#2ecc71', alpha: 'rgba(46,204,113,0.15)' },
-    runner:  { name: 'Runner',  icon: '⚡', basePower: 25.0,  cost: 10,  color: '#3b82f6', alpha: 'rgba(59,130,246,0.15)' },
-    pro:     { name: 'Pro',     icon: '🔥', basePower: 100.0, cost: 50,  color: '#d4af37', alpha: 'rgba(212,175,55,0.15)' },
-    elite:   { name: 'Elite',   icon: '💎', basePower: 300.0, cost: 200, color: '#a855f7', alpha: 'rgba(168,85,247,0.15)' },
+    starter: { name: 'Starter', basePower: 5.0,   cost: 0,   color: '#2ecc71', alpha: 'rgba(46,204,113,0.15)' },
+    runner:  { name: 'Runner',  basePower: 25.0,  cost: 10,  color: '#3b82f6', alpha: 'rgba(59,130,246,0.15)' },
+    pro:     { name: 'Pro',     basePower: 100.0, cost: 50,  color: '#d4af37', alpha: 'rgba(212,175,55,0.15)' },
+    elite:   { name: 'Elite',   basePower: 300.0, cost: 200, color: '#a855f7', alpha: 'rgba(168,85,247,0.15)' },
 };
 
 const DEPOSIT_TIERS = [
@@ -855,6 +1001,10 @@ en: { _n:'English', _f:'🇬🇧',
   deposit_stars:'{stars} Stars', deposit_success:'Funds Added',
   deposit_processing:'Opening Telegram Payment...', pack_label:'Package',
   lang_subtitle:'Choose your preferred language',
+  agent_owned:'OWNED', agent_start_miner:'Starter Agent',
+  upgrade_to:'Upgrade to Lv.{lv}',
+  insufficient_upgrade:'Need {need} ASTRA (you have {have})',
+  agent_buy_title:'Buy {name}', agent_buy_desc:'+{power} TH/s · {cost} ASTRA',
 },
 tr: { _n:'Türkçe', _f:'🇹🇷',
   brand_sub:'AI Ajan Platformu', status_active:'AKTİF',
@@ -889,6 +1039,10 @@ tr: { _n:'Türkçe', _f:'🇹🇷',
   deposit_stars:'{stars} Yıldız', deposit_success:'Bakiye Yüklendi',
   deposit_processing:'Ödeme ekranı açılıyor...', pack_label:'Paket',
   lang_subtitle:'Tercih ettiğin dili seç',
+  agent_owned:'AKTİF', agent_start_miner:'Starter Ajan',
+  upgrade_to:'Lv.{lv} Yükselt',
+  insufficient_upgrade:'Gerekli {need} ASTRA (elinde {have})',
+  agent_buy_title:'{name} Al', agent_buy_desc:'+{power} TH/s · {cost} ASTRA',
 },
 es: { _n:'Español', _f:'🇪🇸',
   brand_sub:'Plataforma de Agentes IA', status_active:'ACTIVO',
@@ -923,6 +1077,10 @@ es: { _n:'Español', _f:'🇪🇸',
   deposit_stars:'{stars} Estrellas', deposit_success:'Fondos Añadidos',
   deposit_processing:'Abriendo pago de Telegram...', pack_label:'Paquete',
   lang_subtitle:'Elige tu idioma preferido',
+  agent_owned:'ACTIVO', agent_start_miner:'Agente Starter',
+  upgrade_to:'Mejorar a Lv.{lv}',
+  insufficient_upgrade:'Necesitas {need} ASTRA (tienes {have})',
+  agent_buy_title:'Comprar {name}', agent_buy_desc:'+{power} TH/s · {cost} ASTRA',
 },
 de: { _n:'Deutsch', _f:'🇩🇪',
   brand_sub:'KI-Agenten-Plattform', status_active:'AKTIV',
@@ -957,6 +1115,10 @@ de: { _n:'Deutsch', _f:'🇩🇪',
   deposit_stars:'{stars} Sterne', deposit_success:'Guthaben aufgeladen',
   deposit_processing:'Telegram-Zahlung öffnen...', pack_label:'Paket',
   lang_subtitle:'Wähle deine bevorzugte Sprache',
+  agent_owned:'AKTIV', agent_start_miner:'Starter-Agent',
+  upgrade_to:'Auf Lv.{lv} verbessern',
+  insufficient_upgrade:'Brauche {need} ASTRA (hast {have})',
+  agent_buy_title:'{name} kaufen', agent_buy_desc:'+{power} TH/s · {cost} ASTRA',
 },
 ru: { _n:'Русский', _f:'🇷🇺',
   brand_sub:'Платформа ИИ-агентов', status_active:'АКТИВЕН',
@@ -991,6 +1153,10 @@ ru: { _n:'Русский', _f:'🇷🇺',
   deposit_stars:'{stars} Звёзд', deposit_success:'Средства Зачислены',
   deposit_processing:'Открытие оплаты Telegram...', pack_label:'Пакет',
   lang_subtitle:'Выберите язык',
+  agent_owned:'АКТИВЕН', agent_start_miner:'Стартовый Агент',
+  upgrade_to:'Улучшить до Lv.{lv}',
+  insufficient_upgrade:'Нужно {need} ASTRA (у вас {have})',
+  agent_buy_title:'Купить {name}', agent_buy_desc:'+{power} TH/s · {cost} ASTRA',
 },
 };
 
@@ -1113,14 +1279,10 @@ function spawnConfetti(count = 45) {
 /* ============= API CLIENT ============= */
 const api = {
     initData: tg?.initData || '',
-
     async call(endpoint, body = {}) {
         const res = await fetch(`${CONFIG.API_BASE}${endpoint}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-Init-Data': this.initData,
-            },
+            headers: { 'Content-Type': 'application/json', 'X-Init-Data': this.initData },
             body: JSON.stringify({ initData: this.initData, ...body }),
         });
         const data = await res.json().catch(() => ({}));
@@ -1131,13 +1293,12 @@ const api = {
         }
         return data;
     },
-
-    fetchState()         { return this.call('/user/state'); },
-    sellTokens(amount)   { return this.call('/trade/sell', { amount }); },
-    upgrade(agentId)     { return this.call('/agent/upgrade', { agentId }); },
-    buy(tierKey)         { return this.call('/agent/buy', { tierKey }); },
-    withdraw(amount)     { return this.call('/user/withdraw', { amount }); },
-    setLanguage(lang)    { return this.call('/language', { language: lang }); },
+    fetchState()               { return this.call('/user/state'); },
+    sellTokens(amount)         { return this.call('/trade/sell', { amount }); },
+    upgrade(agentId)           { return this.call('/agent/upgrade', { agentId }); },
+    buy(tierKey)               { return this.call('/agent/buy', { tierKey }); },
+    withdraw(amount)           { return this.call('/user/withdraw', { amount }); },
+    setLanguage(lang)          { return this.call('/language', { language: lang }); },
     depositInvoice(usd, stars) { return this.call('/deposit/invoice', { usd, stars }); },
 };
 
@@ -1146,7 +1307,8 @@ let state = {
     userId: null, username: 'Miner',
     tokens: 0, usdBalance: 0,
     totalPower: 0, ratePerHour: 0,
-    remaining: 43200,
+    remaining: 28800,
+    hasMiner: false,
     agents: [], history: [],
     referral: { code: '------', invited: 0, earnings: 0, referredUsers: [] },
 };
@@ -1156,10 +1318,9 @@ let serverConfig = {
     SELL_FEE: 0.02,
     MIN_WITHDRAW_USD: 5.0,
     WITHDRAW_FEE: 0.05,
-    CYCLE_SECONDS: 43200,
+    CYCLE_SECONDS: 28800,
 };
 
-function getTotalPower() { return state.totalPower || 0; }
 function getAgentUpgradeCost(agent) {
     const tier = TIERS[agent.tier] || TIERS.starter;
     const base = tier.cost || 5;
@@ -1209,12 +1370,11 @@ function renderDashboard() {
     if (el.progressBar) el.progressBar.style.strokeDashoffset = ARC_LEN * (1 - ratio);
 
     if (el.tokenVal) el.tokenVal.textContent = (state.tokens || 0).toFixed(4);
-    if (el.powerVal) el.powerVal.innerHTML = (state.totalPower || 0).toFixed(2) + ' <small style="font-size:9px;color:var(--text-muted)">TH/s</small>';
+    if (el.powerVal) el.powerVal.textContent = (state.totalPower || 0).toFixed(2) + ' TH/s';
     if (el.balanceUsd) el.balanceUsd.textContent = (state.usdBalance || 0).toFixed(4);
     if (el.rateVal) el.rateVal.textContent = (state.ratePerHour || 0).toFixed(4);
     if (el.agentCountDash) el.agentCountDash.textContent = (state.agents || []).length;
 
-    // Change %
     const cycleHours = serverConfig.CYCLE_SECONDS / 3600;
     const cycleRate = (state.ratePerHour || 0) * cycleHours;
     const changePct = state.tokens > 0 ? Math.min(99, (cycleRate / Math.max(state.tokens, 0.0001)) * 100) : 0;
@@ -1234,6 +1394,7 @@ function renderAgents() {
 
     badge.textContent = (state.agents || []).length;
 
+    // === SAHIP OLUNAN AJANLAR ===
     list.innerHTML = '';
     if (!state.agents || state.agents.length === 0) {
         list.innerHTML = `<div class="empty-state"><div class="icon">⬢</div><div class="title">${t('section_owned')}</div></div>`;
@@ -1253,7 +1414,7 @@ function renderAgents() {
         card.style.setProperty('--tier-color', tier.color);
         card.style.setProperty('--tier-color-alpha', tier.alpha);
         card.innerHTML = `
-            <div class="agent-avatar">${tier.icon}</div>
+            <div class="agent-avatar">${AGENT_SVGS[agent.tier] || AGENT_SVGS.starter}</div>
             <div class="agent-info">
                 <div class="agent-name">${tier.name} #${i+1} <span class="agent-level">Lv.${level}</span></div>
                 <div class="agent-power"><strong>${power.toFixed(2)}</strong> TH/s</div>
@@ -1267,15 +1428,19 @@ function renderAgents() {
         list.appendChild(card);
     });
 
+    // === MAĞAZA ===
     shop.innerHTML = '';
     Object.entries(TIERS).forEach(([key, tier]) => {
+        // Starter zaten alınmışsa mağazada gösterme
+        if (key === 'starter' && state.hasMiner) return;
+
         const ok = state.tokens >= tier.cost;
         const card = document.createElement('div');
         card.className = 'shop-card' + (ok ? '' : ' locked');
         card.style.setProperty('--tier-color', tier.color);
         card.style.setProperty('--tier-color-alpha', tier.alpha);
         card.innerHTML = `
-            <div class="agent-avatar" style="border-color:${tier.color}44">${tier.icon}</div>
+            <div class="agent-avatar">${AGENT_SVGS[key] || AGENT_SVGS.starter}</div>
             <div class="shop-info">
                 <div class="shop-name">${tier.name}</div>
                 <div class="shop-desc">+${tier.basePower.toFixed(1)} TH/s</div>
@@ -1286,6 +1451,11 @@ function renderAgents() {
         `;
         shop.appendChild(card);
     });
+
+    // Starter alınmışsa shop boş kalabilir → küçük not göster
+    if (state.hasMiner && Object.keys(TIERS).filter(k => k !== 'starter').length > 0) {
+        // zaten diğer tierler eklendi
+    }
 }
 
 /* ============= RENDER — HISTORY ============= */
@@ -1309,12 +1479,13 @@ function renderHistory() {
         let icon = '◆', cls = 'cycle', title = h.title || h.type;
         let amt = '', amtCls = 'neutral';
 
-        if (h.type === 'sell') { icon = '↑'; cls = 'sell'; amt = `+${(h.amount||0).toFixed(2)} USD`; amtCls = 'positive'; }
-        else if (h.type === 'upgrade') { icon = '⚡'; cls = 'upgrade'; amt = `-${(h.amount||0).toFixed(2)} ASTRA`; amtCls = 'negative'; }
+        if (h.type === 'sell') { icon = '↑'; cls = 'sell'; amt = `+${Math.abs(h.amount||0).toFixed(2)} USD`; amtCls = 'positive'; }
+        else if (h.type === 'upgrade') { icon = '⚡'; cls = 'upgrade'; amt = `-${Math.abs(h.amount||0).toFixed(2)} ASTRA`; amtCls = 'negative'; }
         else if (h.type === 'buy') { icon = '⬢'; cls = 'buy'; amt = `${(h.amount||0) < 0 ? '' : '-'}${Math.abs(h.amount||0).toFixed(2)} ${h.unit || 'ASTRA'}`; amtCls = 'negative'; }
         else if (h.type === 'deposit') { icon = '+'; cls = 'deposit'; amt = `+$${(h.amount||0).toFixed(2)}`; amtCls = 'positive'; }
         else if (h.type === 'withdraw') { icon = '↓'; cls = 'withdraw'; amt = `-$${Math.abs(h.amount||0).toFixed(2)}`; amtCls = 'negative'; }
         else if (h.type === 'ref') { icon = '◉'; cls = 'ref'; amt = `+${(h.amount||0).toFixed(2)} ASTRA`; amtCls = 'positive'; }
+        else if (h.type === 'cycle') { icon = '◆'; cls = 'cycle'; amt = `+${(h.amount||0).toFixed(4)} ASTRA`; amtCls = 'positive'; }
 
         it.innerHTML = `
             <div class="history-icon ${cls}">${icon}</div>
@@ -1409,24 +1580,30 @@ function showScreen(name) {
     haptic.light();
 }
 
-/* ============= REFRESH ============= */
+/* ============= REFRESH — SUNUCUDAN STATE ÇEK ============= */
 async function refreshState(showError = false) {
     try {
         const res = await api.fetchState();
         if (!res.success || !res.data) throw new Error('bad_response');
         const d = res.data;
 
-        state.userId     = d.userId;
-        state.username   = d.username;
-        state.tokens     = d.tokens || 0;
-        state.usdBalance = d.usdBalance || 0;
-        state.totalPower = d.totalPower || 0;
-        state.ratePerHour= d.ratePerHour || 0;
-        state.agents     = d.agents || [];
-        state.history    = d.history || [];
-        state.referral   = d.referral || state.referral;
+        state.userId      = d.userId;
+        state.username    = d.username;
+        state.tokens      = d.tokens || 0;
+        state.usdBalance  = d.usdBalance || 0;
+        state.totalPower  = d.totalPower || 0;
+        state.ratePerHour = d.ratePerHour || 0;
+        state.agents      = d.agents || [];
+        state.history     = d.history || [];
+        state.referral    = d.referral || state.referral;
+        state.hasMiner    = !!d.hasMiner;
 
-        if (!state.remaining || state.remaining <= 0) state.remaining = serverConfig.CYCLE_SECONDS;
+        // ⏱ KRİTİK: backend'den gelen remaining'i kullan (persistent)
+        if (typeof d.remaining === 'number' && d.remaining > 0) {
+            state.remaining = d.remaining;
+        } else {
+            state.remaining = serverConfig.CYCLE_SECONDS;
+        }
 
         renderDashboard(); renderAgents(); renderHistory(); renderReferral(); renderProfile();
         return true;
@@ -1480,7 +1657,6 @@ async function executeSell(amount) {
         haptic.error();
         const msg = err.message === 'INSUFFICIENT_TOKENS' ? t('msg_insufficient')
                   : err.message === 'BELOW_MINIMUM' ? t('msg_sell_min', { min: serverConfig.MIN_SELL_ASTRA })
-                  : err.message === 'RATE_LIMIT' ? t('msg_rate_limit')
                   : t('msg_error');
         showToast(msg);
     }
@@ -1496,15 +1672,14 @@ function handleUpgradeAgent(agentId) {
         haptic.error();
         modal.show({
             icon: '⚡', iconType: 'error', title: t('msg_insufficient'),
-            message: `${cost.toFixed(2)} ASTRA / ${state.tokens.toFixed(2)}`,
+            message: t('insufficient_upgrade', { need: cost.toFixed(2), have: state.tokens.toFixed(2) }),
             buttons: [{ text: t('btn_ok'), type: 'confirm' }],
         });
         return;
     }
-    const tier = TIERS[agent.tier] || TIERS.starter;
     modal.show({
-        icon: tier.icon, title: t('btn_upgrade'),
-        message: `${cost.toFixed(2)} ASTRA → Lv.${(agent.level || 1) + 1}`,
+        icon: '⚡', title: t('upgrade_to', { lv: (agent.level || 1) + 1 }),
+        message: `${cost.toFixed(2)} ASTRA`,
         buttons: [
             { text: t('btn_cancel'), type: 'cancel' },
             { text: t('btn_confirm'), type: 'confirm', onClick: () => executeAgentUpgrade(agentId) },
@@ -1537,7 +1712,7 @@ function handleQuickUpgrade() {
         haptic.error();
         modal.show({
             icon: '⚡', iconType: 'error', title: t('msg_insufficient'),
-            message: `${cheapestCost.toFixed(2)} ASTRA / ${state.tokens.toFixed(2)}`,
+            message: t('insufficient_upgrade', { need: cheapestCost.toFixed(2), have: state.tokens.toFixed(2) }),
             buttons: [
                 { text: t('btn_cancel'), type: 'cancel' },
                 { text: t('btn_ok'), type: 'confirm', onClick: () => showScreen('agents') },
@@ -1553,11 +1728,21 @@ function handleBuyAgent(tierKey) {
     haptic.medium();
     const tier = TIERS[tierKey];
     if (!tier) return;
+
+    // Starter zaten alınmış mı?
+    if (tierKey === 'starter' && state.hasMiner) {
+        showToast(t('agent_owned'));
+        return;
+    }
     if (state.tokens < tier.cost) { haptic.error(); showToast(t('msg_insufficient')); return; }
 
     modal.show({
-        icon: tier.icon, title: tier.name,
-        message: `${tier.cost === 0 ? 'FREE' : tier.cost + ' ASTRA'} → +${tier.basePower.toFixed(1)} TH/s`,
+        icon: '⬢',
+        title: t('agent_buy_title', { name: tier.name }),
+        message: t('agent_buy_desc', {
+            power: tier.basePower.toFixed(1),
+            cost: tier.cost === 0 ? 'FREE' : tier.cost,
+        }),
         buttons: [
             { text: t('btn_cancel'), type: 'cancel' },
             { text: t('btn_confirm'), type: 'confirm', onClick: () => executeBuyAgent(tierKey) },
@@ -1567,14 +1752,17 @@ function handleBuyAgent(tierKey) {
 
 async function executeBuyAgent(tierKey) {
     try {
-        const res = await api.buy(tierKey);
+        await api.buy(tierKey);
         haptic.success();
         spawnConfetti(60);
         showToast(t('msg_buy_success'));
         await refreshState();
     } catch (err) {
         haptic.error();
-        showToast(err.message === 'INSUFFICIENT_TOKENS' ? t('msg_insufficient') : t('msg_error'));
+        const msg = err.message === 'ALREADY_HAVE_MINER' ? t('agent_owned')
+                  : err.message === 'INSUFFICIENT_TOKENS' ? t('msg_insufficient')
+                  : t('msg_error');
+        showToast(msg);
     }
 }
 
@@ -1593,6 +1781,7 @@ function copyRefLink() {
         navigator.clipboard.writeText(link).then(()=>showToast(t('msg_copied'))).catch(()=>{fallback();showToast(t('msg_copied'))});
     } else { fallback(); showToast(t('msg_copied')); }
 }
+
 function shareRefLink() {
     haptic.medium();
     const link = `https://t.me/${CONFIG.BOT_USERNAME}?start=${state.referral.code}`;
@@ -1601,7 +1790,7 @@ function shareRefLink() {
     else window.open(u, '_blank');
 }
 
-/* ============= ACTIONS — DEPOSIT (Stars) ============= */
+/* ============= ACTIONS — DEPOSIT ============= */
 function openDeposit() {
     showScreen('profile');
     setTimeout(() => {
@@ -1612,10 +1801,7 @@ function openDeposit() {
 
 function startDeposit(tier) {
     haptic.medium();
-    if (!tg?.openInvoice) {
-        showToast('Open in Telegram');
-        return;
-    }
+    if (!tg?.openInvoice) { showToast('Open in Telegram'); return; }
     modal.show({
         icon: '★', title: t('deposit_title'),
         message: `$${tier.usd} · ${t('deposit_stars', { stars: tier.stars })}`,
@@ -1639,8 +1825,7 @@ async function requestDepositInvoice(tier) {
                 await new Promise(r => setTimeout(r, 800));
                 await refreshState();
                 modal.show({
-                    icon: '✓', iconType: 'success',
-                    title: t('deposit_success'),
+                    icon: '✓', iconType: 'success', title: t('deposit_success'),
                     message: `+$${tier.usd.toFixed(2)}`,
                     buttons: [{ text: t('btn_ok'), type: 'confirm' }],
                 });
@@ -1701,8 +1886,7 @@ async function executeWithdraw(amount) {
         spawnConfetti(30);
         await refreshState();
         modal.show({
-            icon: '✓', iconType: 'success',
-            title: t('withdraw_success'),
+            icon: '✓', iconType: 'success', title: t('withdraw_success'),
             message: `${t('modal_sell_net')}: <strong>${res.net.toFixed(4)} USD</strong>`,
             buttons: [{ text: t('btn_ok'), type: 'confirm' }],
         });
@@ -1770,7 +1954,6 @@ document.addEventListener('keydown', e => {
     const status = document.getElementById('loadingStatus');
     const overlay = document.getElementById('loadingOverlay');
 
-    // Dil: localStorage > default EN
     const storedLang = localStorage.getItem('astra_lang');
     CURRENT_LANG = (storedLang && LOCALES[storedLang]) ? storedLang : CONFIG.DEFAULT_LANG;
     applyI18n();
@@ -1809,7 +1992,7 @@ document.addEventListener('keydown', e => {
 
     if (ok) {
         haptic.light();
-        console.log('%c✦ Astra Mining v3.3', 'color:#d4af37;font-weight:bold');
+        console.log('%c✦ Astra Mining v3.5', 'color:#d4af37;font-weight:bold');
     } else {
         showToast(t('msg_connection_error'));
     }
