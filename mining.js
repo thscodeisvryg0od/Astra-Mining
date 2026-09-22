@@ -1,8 +1,11 @@
 import { cfg, TIERS } from './config.js';
 
 /* =========================================================
-   ASTRA MINING — Mining Engine
+   ASTRA MINING — API Config & Mining Engine
    ========================================================= */
+
+// Backend API Adresi (GitHub Pages - PythonAnywhere Bağlantısı)
+export const API_BASE_URL = "https://firaty33.pythonanywhere.com";
 
 export function getAgentPower(agent) {
     const tier = TIERS[agent.tier] || TIERS.starter;
