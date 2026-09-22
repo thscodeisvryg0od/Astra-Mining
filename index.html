@@ -445,10 +445,13 @@
 
 <script>
 /* =========================================================================
-   CONFIG & STATE
+   CONFIG & API ENDPOINT
    ========================================================================= */
 const tg = window.Telegram?.WebApp;
 if (tg) tg.ready();
+
+// Kendi PythonAnywhere domaininizi buraya yazın
+const API_BASE_URL = "https://kullaniciadiniz.pythonanywhere.com/api"; 
 
 const CONFIG = {
     BOT_USERNAME: 'AstraMiningBot'
@@ -465,21 +468,17 @@ const serverConfig = {
 let state = {
     userId: '100001',
     username: 'Miner',
-    tokens: 125.50,
-    usdBalance: 12.40,
-    totalPower: 15.5,
-    ratePerHour: 3.25,
-    agents: [
-        { id: 'ag_1', tier: 'starter', level: 2 }
-    ],
-    history: [
-        { type: 'sell', title: 'Sold ASTRA', amount: 2.50, unit: 'USD', timestamp: Date.now() - 3600000 }
-    ],
+    tokens: 0.00,
+    usdBalance: 0.00,
+    totalPower: 0.0,
+    ratePerHour: 0.00,
+    agents: [],
+    history: [],
     referral: {
-        code: 'ASTRA99',
-        invited: 3,
-        earnings: 12.5,
-        referredUsers: [{ name: 'Alex', earned: 4.2 }]
+        code: 'ASTRA',
+        invited: 0,
+        earnings: 0,
+        referredUsers: []
     }
 };
 
@@ -556,7 +555,7 @@ function applyI18n() {
 }
 
 /* =========================================================================
-   UTILS & API STUBS
+   UTILS & REAL API HANDLERS
    ========================================================================= */
 const haptic = {
     light: () => tg?.HapticFeedback?.impactOccurred('light'),
@@ -615,48 +614,59 @@ function timeAgo(ts) {
 }
 
 const api = {
-    async fetchState() { return { success: true, data: state }; },
+    async fetchState() {
+        const initData = tg?.initData || "";
+        const response = await fetch(`${API_BASE_URL}/user/state`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ initData })
+        });
+        if (!response.ok) throw new Error("API ENDPOINT NOT CONFIGURED");
+        return await response.json();
+    },
     async sellTokens(amount) {
-        if (state.tokens < amount) throw new Error("Insufficient tokens");
-        const netUsd = (amount * serverConfig.TOKEN_TO_USD) * (1 - serverConfig.SELL_FEE);
-        state.tokens -= amount;
-        state.usdBalance += netUsd;
-        state.history.unshift({ type: 'sell', title: 'Sold ASTRA', amount: netUsd, unit: 'USD', timestamp: Date.now() });
-        return { success: true };
+        const initData = tg?.initData || "";
+        const response = await fetch(`${API_BASE_URL}/trade/sell`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ initData, amount })
+        });
+        if (!response.ok) throw new Error("Transaction failed");
+        return await response.json();
     },
     async upgrade(agentId) {
-        const ag = state.agents.find(a => a.id === agentId);
-        if (!ag) throw new Error("Agent not found");
-        const cost = getAgentUpgradeCost(ag);
-        if (state.usdBalance < cost) throw new Error(`Requires $${cost.toFixed(2)} USD`);
-        state.usdBalance -= cost;
-        ag.level = (ag.level || 1) + 1;
-        state.history.unshift({ type: 'buy', title: 'Upgraded Agent', amount: -cost, unit: 'USD', timestamp: Date.now() });
-        return { success: true };
+        const initData = tg?.initData || "";
+        const response = await fetch(`${API_BASE_URL}/agent/upgrade`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ initData, agentId })
+        });
+        if (!response.ok) throw new Error("Upgrade failed");
+        return await response.json();
     },
     async buy(tierKey) {
-        const tier = TIERS[tierKey];
-        if (state.usdBalance < tier.cost) throw new Error(`Requires $${tier.cost} USD`);
-        state.usdBalance -= tier.cost;
-        state.agents.push({ id: 'ag_' + Date.now(), tier: tierKey, level: 1 });
-        state.history.unshift({ type: 'buy', title: `Bought ${tier.name}`, amount: -tier.cost, unit: 'USD', timestamp: Date.now() });
-        return { success: true };
+        const initData = tg?.initData || "";
+        const response = await fetch(`${API_BASE_URL}/agent/buy`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ initData, tierKey })
+        });
+        if (!response.ok) throw new Error("Purchase failed");
+        return await response.json();
     },
-    async setLang(code) { return { success: true }; },
-    async depositInvoice(usd, stars) { return { invoiceUrl: 'https://t.me/invoice/test' }; },
     async withdraw(amount) {
-        state.usdBalance -= amount;
-        state.history.unshift({ type: 'sell', title: 'Withdrawal', amount: -amount, unit: 'USD', timestamp: Date.now() });
-        return { success: true };
+        const initData = tg?.initData || "";
+        const response = await fetch(`${API_BASE_URL}/user/withdraw`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ initData, amount })
+        });
+        if (!response.ok) throw new Error("Withdrawal failed");
+        return await response.json();
     }
 };
 
 async function refreshState(render = true) {
-    let totPower = 0;
-    state.agents.forEach(a => { totPower += getAgentPower(a); });
-    state.totalPower = totPower;
-    state.ratePerHour = totPower * 0.25;
-
     if (render) {
         renderDashboard();
         renderAgents();
@@ -674,10 +684,10 @@ function renderDashboard() {
     const elPower = document.getElementById('dashPower');
     const elRate = document.getElementById('dashRate');
 
-    if (elTokens) elTokens.textContent = state.tokens.toFixed(4);
-    if (elUsd) elUsd.textContent = (state.tokens * serverConfig.TOKEN_TO_USD).toFixed(2);
-    if (elPower) elPower.textContent = state.totalPower.toFixed(1);
-    if (elRate) elRate.textContent = state.ratePerHour.toFixed(2);
+    if (elTokens) elTokens.textContent = (state.tokens || 0).toFixed(4);
+    if (elUsd) elUsd.textContent = ((state.tokens || 0) * serverConfig.TOKEN_TO_USD).toFixed(2);
+    if (elPower) elPower.textContent = (state.totalPower || 0).toFixed(1);
+    if (elRate) elRate.textContent = (state.ratePerHour || 0).toFixed(2);
 }
 
 /* =========================================================================
@@ -690,11 +700,11 @@ function renderAgents() {
 
     if (!agentList || !shopList) return;
 
-    badge.textContent = state.agents.length;
+    badge.textContent = (state.agents || []).length;
     agentList.innerHTML = '';
     shopList.innerHTML = '';
 
-    if (state.agents.length === 0) {
+    if (!state.agents || state.agents.length === 0) {
         agentList.innerHTML = `
             <div class="empty-state">
                 <div class="icon">🤖</div>
@@ -767,15 +777,16 @@ function renderHistory() {
     const badge = document.getElementById('historyCountBadge');
     if (!list) return;
 
-    badge.textContent = state.history.length;
+    const logs = state.history || [];
+    badge.textContent = logs.length;
     list.innerHTML = '';
 
-    if (state.history.length === 0) {
+    if (logs.length === 0) {
         list.innerHTML = `<div class="empty-state"><div class="icon">📜</div><div>${t('no_transactions')}</div></div>`;
         return;
     }
 
-    state.history.forEach(item => {
+    logs.forEach(item => {
         const el = document.createElement('div');
         el.className = 'history-item';
         let iconClass = item.type || 'sell';
@@ -944,7 +955,7 @@ async function handleSell() {
                         if (res.success) {
                             haptic.success();
                             showToast(t('msg_sell_success'));
-                            refreshState();
+                            await loadUserData();
                         }
                     } catch(err) {
                         haptic.error();
@@ -957,7 +968,7 @@ async function handleSell() {
 }
 
 function handleQuickUpgrade() {
-    if (state.agents.length === 0) {
+    if (!state.agents || state.agents.length === 0) {
         showScreen('agents');
         return;
     }
@@ -971,7 +982,7 @@ async function handleUpgradeAgent(agentId) {
         if (res.success) {
             haptic.success();
             showToast(t('msg_upgrade_success'));
-            refreshState();
+            await loadUserData();
         }
     } catch(err) {
         haptic.error();
@@ -986,7 +997,7 @@ async function handleBuyAgent(tierKey) {
         if (res.success) {
             haptic.success();
             showToast(t('msg_buy_success'));
-            refreshState();
+            await loadUserData();
         }
     } catch(err) {
         haptic.error();
@@ -1028,7 +1039,7 @@ function openWithdraw() {
         title: t('withdraw_title'),
         message: `
             ${t('withdraw_desc', { min: serverConfig.MIN_WITHDRAW_USD, fee: serverConfig.WITHDRAW_FEE * 100 })}<br><br>
-            ${t('withdraw_available', { amount: state.usdBalance.toFixed(2) })}
+            ${t('withdraw_available', { amount: (state.usdBalance || 0).toFixed(2) })}
         `,
         icon: '↓',
         buttons: [
@@ -1047,7 +1058,7 @@ function openWithdraw() {
                         if (res.success) {
                             haptic.success();
                             showToast(t('withdraw_success'));
-                            refreshState();
+                            await loadUserData();
                         }
                     } catch(err) {
                         haptic.error();
@@ -1060,24 +1071,41 @@ function openWithdraw() {
 }
 
 /* =========================================================================
-   APP INIT & REALTIME KAZIM
+   APP INIT & REALTIME DATA SYNC
    ========================================================================= */
-setInterval(() => {
-    // Otomatik sanal kazım simülasyonu
-    state.tokens += (state.ratePerHour / 3600);
-    renderDashboard();
-}, 1000);
+async function loadUserData() {
+    try {
+        const res = await api.fetchState();
+        if (res && res.success) {
+            state = res.data;
+            refreshState(true);
+            return true;
+        } else {
+            throw new Error("Invalid response format");
+        }
+    } catch(err) {
+        console.error("Initialization failed:", err);
+        const status = document.getElementById('loadingStatus');
+        if (status) {
+            status.style.color = '#e74c3c';
+            status.textContent = "API ENDPOINT NOT CONFIGURED";
+        }
+        return false;
+    }
+}
 
 async function initApp() {
     const savedLang = localStorage.getItem('astra_lang');
     if (savedLang && LOCALES[savedLang]) CURRENT_LANG = savedLang;
 
-    await refreshState(true);
+    const isConnected = await loadUserData();
 
-    setTimeout(() => {
-        const overlay = document.getElementById('loadingOverlay');
-        if (overlay) overlay.classList.add('hide');
-    }, 500);
+    if (isConnected) {
+        setTimeout(() => {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) overlay.classList.add('hide');
+        }, 500);
+    }
 }
 
 document.addEventListener('DOMContentLoaded', initApp);
