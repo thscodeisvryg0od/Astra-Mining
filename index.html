@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Astra Mining</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root {
+    --bg-deep: #060d1c;
+    --bg-panel: rgba(16, 27, 48, 0.82);
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-accent: rgba(212, 175, 55, 0.28);
+    --gold: #d4af37;
+    --gold-soft: #f0d57a;
+    --gold-deep: #8a6d1c;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #5a6580;
+    --success: #2ecc71;
+    --danger: #e74c3c;
+    --blue: #3b82f6;
+    --purple: #a855f7;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
+html, body { overscroll-behavior: none; }
+body { background: #000; color: var(--text-primary); display: flex; justify-content: center; align-items: center; min-height: 100vh; min-height: 100dvh; overflow: hidden; -webkit-font-smoothing: antialiased; }
+
+.app-container { width: 100%; max-width: 420px; height: 100vh; height: 100dvh; max-height: 900px; position: relative; display: flex; flex-direction: column; overflow: hidden; background: radial-gradient(ellipse 90% 60% at 50% -10%, rgba(212, 175, 55, 0.14) 0%, transparent 55%), radial-gradient(ellipse 70% 50% at 50% 110%, rgba(59, 130, 246, 0.10) 0%, transparent 60%), linear-gradient(180deg, #0d1a30 0%, #0a1428 45%, #050a15 100%); }
+.app-container::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px); background-size: 44px 44px; pointer-events: none; mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, #000 30%, transparent 100%); -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, #000 30%, transparent 100%); z-index: 0; }
+.app-container::after { content: ''; position: absolute; inset: 0; background-image: radial-gradient(1.5px 1.5px at 12% 18%, rgba(255,255,255,0.5), transparent), radial-gradient(1px 1px at 78% 12%, rgba(212,175,55,0.6), transparent), radial-gradient(1px 1px at 42% 68%, rgba(255,255,255,0.4), transparent), radial-gradient(1.5px 1.5px at 88% 82%, rgba(212,175,55,0.5), transparent), radial-gradient(1px 1px at 22% 88%, rgba(255,255,255,0.3), transparent), radial-gradient(1px 1px at 62% 34%, rgba(255,255,255,0.35), transparent); animation: starsTwinkle 6s ease-in-out infinite; pointer-events: none; z-index: 0; }
+@keyframes starsTwinkle { 0%,100%{opacity:0.7} 50%{opacity:1} }
+
+.screens { flex: 1; min-height: 0; position: relative; z-index: 1; }
+.screen { position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; opacity: 0; transform: translateX(24px); pointer-events: none; transition: opacity 0.32s ease, transform 0.32s cubic-bezier(0.22, 1, 0.36, 1); display: flex; flex-direction: column; padding: calc(20px + env(safe-area-inset-top)) 18px 20px; -webkit-overflow-scrolling: touch; scrollbar-width: none; will-change: opacity, transform; }
+.screen::-webkit-scrollbar { display: none; }
+.screen.active { opacity: 1; transform: translateX(0); pointer-events: auto; }
+
+.topbar { display: flex; justify-content: space-between; align-items: center; }
+.brand { display: flex; align-items: center; gap: 11px; }
+.brand-mark { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #f0d57a 0%, #d4af37 45%, #8a6d1c 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 14px rgba(212, 175, 55, 0.32), inset 0 1px 0 rgba(255,255,255,0.3); position: relative; animation: brandGlow 3s ease-in-out infinite; }
+.brand-mark::after { content: ''; position: absolute; inset: 0; border-radius: 10px; background: linear-gradient(135deg, rgba(255,255,255,0.4), transparent 50%); pointer-events: none; }
+.brand-mark svg { width: 20px; height: 20px; position: relative; z-index: 1; }
+@keyframes brandGlow { 0%,100%{box-shadow:0 4px 14px rgba(212,175,55,0.32),inset 0 1px 0 rgba(255,255,255,0.3)} 50%{box-shadow:0 4px 22px rgba(212,175,55,0.55),inset 0 1px 0 rgba(255,255,255,0.3)} }
+
+.brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+.brand-title { font-size: 15px; font-weight: 800; letter-spacing: 0.3px; background: linear-gradient(135deg, #fff 0%, #e8c874 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.brand-sub { font-size: 9.5px; color: var(--text-muted); letter-spacing: 1.6px; text-transform: uppercase; font-weight: 600; }
+
+.header-actions { display: flex; gap: 6px; align-items: center; }
+.status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 20px; background: rgba(46, 204, 113, 0.10); border: 1px solid rgba(46, 204, 113, 0.28); font-size: 10px; font-weight: 700; color: #4ade80; letter-spacing: 0.6px; }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: #2ecc71; box-shadow: 0 0 8px #2ecc71; animation: pulse 2s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.85)} }
+.icon-btn { width: 32px; height: 32px; border-radius: 9px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s, transform 0.1s; color: var(--text-secondary); }
+.icon-btn:active { transform: scale(0.94); }
+.icon-btn svg { width: 16px; height: 16px; }
+
+.screen-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; padding-top: 8px; }
+.screen-header h1 { font-size: 24px; font-weight: 800; letter-spacing: -0.5px; background: linear-gradient(135deg, #fff 40%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.screen-header .badge { padding: 5px 11px; border-radius: 12px; background: rgba(212, 175, 55, 0.10); border: 1px solid rgba(212, 175, 55, 0.28); color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: 0.5px; }
+
+.balance-card { margin-top: 20px; padding: 18px 20px 20px; border-radius: 18px; background: linear-gradient(135deg, rgba(212, 175, 55, 0.13) 0%, rgba(212, 175, 55, 0.02) 55%, rgba(255,255,255,0.02) 100%); border: 1px solid var(--border-accent); position: relative; overflow: hidden; box-shadow: 0 12px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06); }
+.balance-card::before { content: ''; position: absolute; top: -60%; right: -25%; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(212, 175, 55, 0.20) 0%, transparent 70%); pointer-events: none; animation: floatBlob 8s ease-in-out infinite; }
+.balance-card::after { content: ''; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.08) 45%, rgba(255,255,255,0.14) 50%, rgba(255,255,255,0.08) 55%, transparent 70%); transform: translateX(-120%); animation: shimmer 5s ease-in-out infinite; pointer-events: none; }
+@keyframes shimmer { 0%,60%{transform:translateX(-120%)} 100%{transform:translateX(120%)} }
+@keyframes floatBlob { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-14px,10px) scale(1.08)} }
+
+.balance-label { font-size: 10.5px; color: var(--text-secondary); letter-spacing: 1.6px; text-transform: uppercase; font-weight: 700; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; }
+.balance-label .flag { width: 20px; height: 15px; border-radius: 3px; box-shadow: 0 1px 4px rgba(0,0,0,0.4); cursor: pointer; }
+.balance-value { font-size: 28px; font-weight: 800; margin-top: 8px; letter-spacing: -0.8px; font-variant-numeric: tabular-nums; display: flex; align-items: baseline; gap: 7px; position: relative; z-index: 1; text-shadow: 0 2px 16px rgba(212, 175, 55, 0.25); }
+.balance-value .unit { font-size: 12px; color: var(--gold); font-weight: 800; letter-spacing: 1.2px; }
+.balance-change { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: #4ade80; margin-top: 8px; font-weight: 700; letter-spacing: 0.3px; position: relative; z-index: 1; }
+
+.hero { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 0; position: relative; }
+.mining-stage { position: relative; width: 240px; height: 240px; display: flex; align-items: center; justify-content: center; }
+.orbit { position: absolute; border-radius: 50%; border: 1px solid rgba(212, 175, 55, 0.12); pointer-events: none; }
+.orbit-1 { width: 240px; height: 240px; animation: orbitSpin 18s linear infinite; }
+.orbit-2 { width: 200px; height: 200px; animation: orbitSpin 12s linear infinite reverse; border-color: rgba(59, 130, 246, 0.12); }
+.orbit-3 { width: 170px; height: 170px; animation: orbitSpin 24s linear infinite; border-color: rgba(168, 85, 247, 0.10); }
+.orbit-dot { position: absolute; width: 7px; height: 7px; border-radius: 50%; top: -4px; left: 50%; transform: translateX(-50%); background: var(--gold); box-shadow: 0 0 10px var(--gold), 0 0 20px rgba(212, 175, 55, 0.5); }
+.orbit-2 .orbit-dot { background: var(--blue); box-shadow: 0 0 10px var(--blue), 0 0 20px rgba(59, 130, 246, 0.5); }
+.orbit-3 .orbit-dot { background: var(--purple); box-shadow: 0 0 10px var(--purple), 0 0 20px rgba(168, 85, 247, 0.5); }
+@keyframes orbitSpin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+
+.glow-pulse { position: absolute; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(212, 175, 55, 0.18) 0%, transparent 60%); animation: glowPulse 3s ease-in-out infinite; pointer-events: none; }
+@keyframes glowPulse { 0%,100%{transform:scale(1);opacity:0.6} 50%{transform:scale(1.15);opacity:1} }
+
+.progress-arc { position: absolute; width: 240px; height: 240px; transform: rotate(-90deg); pointer-events: none; filter: drop-shadow(0 0 12px rgba(212, 175, 55, 0.4)); }
+.progress-arc .track { fill: none; stroke: rgba(255, 255, 255, 0.05); stroke-width: 4; }
+.progress-arc .bar { fill: none; stroke: url(#arcGrad); stroke-width: 4; stroke-linecap: round; transition: stroke-dashoffset 0.6s ease; }
+
+.core { position: relative; width: 148px; height: 148px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #1a3356 0%, #0a1428 70%, #050a15 100%); border: 1px solid rgba(212, 175, 55, 0.3); display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 12px 40px rgba(0, 0, 0, 0.5); z-index: 3; }
+.core::before { content: ''; position: absolute; inset: 6px; border-radius: 50%; border: 1px dashed rgba(212, 175, 55, 0.15); animation: coreSpin 30s linear infinite; }
+@keyframes coreSpin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+.core-crystal { width: 34px; height: 34px; filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.7)); animation: crystalFloat 3s ease-in-out infinite; }
+@keyframes crystalFloat { 0%,100%{transform:translateY(0) rotate(0)} 50%{transform:translateY(-3px) rotate(2deg)} }
+.core-label { font-size: 8.5px; color: var(--text-muted); letter-spacing: 2.4px; text-transform: uppercase; font-weight: 700; margin-top: 5px; margin-bottom: 2px; }
+.timer-display { font-size: 20px; font-weight: 800; letter-spacing: 1.2px; font-variant-numeric: tabular-nums; background: linear-gradient(180deg, #fff 0%, #e8c874 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(0 0 8px rgba(212, 175, 55, 0.35)); }
+
+.particle { position: absolute; border-radius: 50%; pointer-events: none; animation: floatUp linear infinite; }
+@keyframes floatUp { 0%{transform:translateY(0) scale(1);opacity:0} 10%{opacity:1} 90%{opacity:1} 100%{transform:translateY(-120px) scale(0.4);opacity:0} }
+
+.hex-caption { margin-top: 16px; font-size: 11.5px; color: var(--text-secondary); letter-spacing: 0.4px; text-align: center; position: relative; z-index: 2; }
+.hex-caption strong { color: var(--gold-soft); font-weight: 800; }
+
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-bottom: 12px; position: relative; z-index: 2; }
+.stat-card { background: var(--bg-panel); border: 1px solid var(--border-subtle); border-radius: 15px; padding: 14px 16px; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); position: relative; overflow: hidden; transition: border-color 0.25s ease, transform 0.15s ease; box-shadow: inset 0 1px 0 rgba(255,255,255,0.04); }
+.stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--card-accent, rgba(212,175,55,0.5)), transparent); }
+.stat-card:active { transform: scale(0.98); border-color: rgba(212, 175, 55, 0.35); }
+.stat-header { display: flex; justify-content: space-between; align-items: center; font-size: 9.5px; color: var(--text-muted); letter-spacing: 1.4px; text-transform: uppercase; font-weight: 700; }
+.stat-icon { width: 22px; height: 22px; border-radius: 7px; background: linear-gradient(135deg, rgba(212, 175, 55, 0.18), rgba(212, 175, 55, 0.05)); border: 1px solid rgba(212, 175, 55, 0.22); display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: 11px; }
+.stat-icon.blue { background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(59, 130, 246, 0.05)); border-color: rgba(59, 130, 246, 0.25); color: var(--blue); }
+.stat-value { font-size: 21px; font-weight: 800; margin-top: 8px; font-variant-numeric: tabular-nums; letter-spacing: -0.4px; display: flex; align-items: baseline; gap: 3px; }
+.stat-value small { font-size: 10.5px; color: var(--text-muted); font-weight: 600; margin-left: 2px; }
+.stat-progress { margin-top: 8px; height: 3px; background: rgba(255, 255, 255, 0.05); border-radius: 3px; overflow: hidden; }
+.stat-progress-bar { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--gold-deep), var(--gold), var(--gold-soft)); box-shadow: 0 0 8px rgba(212, 175, 55, 0.5); transition: width 0.5s ease; }
+.stat-progress-bar.blue { background: linear-gradient(90deg, #1e40af, var(--blue), #93c5fd); box-shadow: 0 0 8px rgba(59, 130, 246, 0.5); }
+
+.actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; position: relative; z-index: 2; }
+.btn { border: none; outline: none; padding: 15px 0; border-radius: 13px; font-weight: 800; font-size: 12px; letter-spacing: 1.1px; cursor: pointer; transition: transform 0.12s ease, box-shadow 0.2s ease, filter 0.2s; color: var(--text-primary); text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 7px; position: relative; overflow: hidden; }
+.btn::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%); transform: translateX(-100%); transition: transform 0.6s ease; }
+.btn:not(:disabled):hover::after { transform: translateX(100%); }
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-primary { background: linear-gradient(135deg, #f0d57a 0%, #d4af37 50%, #a3841f 100%); color: #0a1428; box-shadow: 0 6px 22px rgba(212, 175, 55, 0.30), inset 0 1px 0 rgba(255,255,255,0.35); }
+.btn-secondary { background: rgba(255, 255, 255, 0.055); border: 1px solid rgba(255, 255, 255, 0.09); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05); }
+.btn-secondary:active { background: rgba(255, 255, 255, 0.09); }
+.btn-sm { padding: 9px 14px; font-size: 10.5px; border-radius: 10px; letter-spacing: 0.7px; }
+
+.bottom-nav { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; padding: 9px 4px calc(9px + env(safe-area-inset-bottom)); background: rgba(8, 16, 32, 0.94); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-top: 1px solid rgba(255, 255, 255, 0.05); position: relative; z-index: 10; box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.4); }
+.bottom-nav::before { content: ''; position: absolute; top: -1px; left: 15%; right: 15%; height: 1px; background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.4), transparent); }
+.nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 7px 0; background: none; border: none; color: var(--text-muted); font-size: 8.5px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; transition: color 0.2s, background 0.25s; border-radius: 10px; position: relative; }
+.nav-item svg { width: 19px; height: 19px; transition: filter 0.25s; }
+.nav-item.active { color: var(--gold-soft); background: linear-gradient(180deg, rgba(212, 175, 55, 0.09), rgba(212, 175, 55, 0.02)); }
+.nav-item.active svg { filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.6)); }
+.nav-item.active::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 20px; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); border-radius: 2px; }
+
+.agent-list, .shop-list, .history-list { display: flex; flex-direction: column; gap: 11px; }
+.agent-card { background: var(--bg-panel); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 13px; position: relative; overflow: hidden; backdrop-filter: blur(14px); transition: transform 0.15s, border-color 0.2s; }
+.agent-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--tier-color, var(--gold)); box-shadow: 0 0 12px var(--tier-color, var(--gold)); }
+.agent-card::after { content: ''; position: absolute; top: -40%; right: -15%; width: 140px; height: 140px; border-radius: 50%; background: radial-gradient(circle, var(--tier-color-alpha, rgba(212,175,55,0.12)) 0%, transparent 70%); pointer-events: none; }
+.agent-card:active { transform: scale(0.985); }
+.agent-avatar { width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)); border: 1px solid var(--tier-color-alpha, rgba(212,175,55,0.25)); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 4px 12px rgba(0,0,0,0.3); position: relative; z-index: 1; }
+.agent-info { flex: 1; min-width: 0; position: relative; z-index: 1; }
+.agent-name { font-size: 13.5px; font-weight: 800; display: flex; align-items: center; gap: 7px; letter-spacing: -0.1px; }
+.agent-level { font-size: 9px; padding: 2.5px 7px; border-radius: 5px; background: linear-gradient(135deg, var(--tier-color, var(--gold)), color-mix(in srgb, var(--tier-color, var(--gold)) 60%, black)); color: #0a1428; font-weight: 800; letter-spacing: 0.6px; }
+.agent-power { font-size: 11.5px; color: var(--text-secondary); margin-top: 4px; font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 5px; }
+.agent-power strong { color: var(--text-primary); font-weight: 700; }
+.agent-action { display: flex; flex-direction: column; gap: 4px; position: relative; z-index: 1; }
+.agent-action .cost { font-size: 9px; color: var(--text-muted); text-align: center; letter-spacing: 0.4px; font-weight: 700; text-transform: uppercase; }
+.level-pips { display: flex; gap: 3px; margin-top: 5px; }
+.level-pip { width: 14px; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.08); }
+.level-pip.filled { background: var(--tier-color, var(--gold)); box-shadow: 0 0 5px var(--tier-color, var(--gold)); }
+
+.shop-card { background: var(--bg-panel); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 14px 16px; display: flex; align-items: center; gap: 13px; position: relative; overflow: hidden; backdrop-filter: blur(14px); transition: border-color 0.2s, transform 0.15s; }
+.shop-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--tier-color-alpha, rgba(212,175,55,0.05)) 0%, transparent 55%); pointer-events: none; }
+.shop-card.locked { opacity: 0.5; filter: saturate(0.4); }
+.shop-card:not(.locked):active { transform: scale(0.985); }
+.shop-info { flex: 1; position: relative; z-index: 1; }
+.shop-name { font-size: 13.5px; font-weight: 800; display: flex; align-items: center; gap: 7px; }
+.shop-desc { font-size: 10.5px; color: var(--text-muted); margin-top: 4px; font-weight: 500; letter-spacing: 0.2px; }
+
+.history-item { background: var(--bg-panel); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 13px 15px; display: flex; align-items: center; gap: 13px; backdrop-filter: blur(12px); position: relative; overflow: hidden; animation: slideIn 0.35s ease backwards; }
+@keyframes slideIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+.history-icon { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; font-weight: 700; border: 1px solid transparent; }
+.history-icon.sell { background: linear-gradient(135deg, rgba(46,204,113,0.15), rgba(46,204,113,0.04)); color: var(--success); border-color: rgba(46,204,113,0.2); }
+.history-icon.upgrade { background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.04)); color: var(--gold); border-color: rgba(212,175,55,0.2); }
+.history-icon.buy { background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(59,130,246,0.04)); color: var(--blue); border-color: rgba(59,130,246,0.2); }
+.history-icon.cycle { background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(168,85,247,0.04)); color: var(--purple); border-color: rgba(168,85,247,0.2); }
+.history-icon.ref { background: linear-gradient(135deg, rgba(46,204,113,0.15), rgba(46,204,113,0.04)); color: var(--success); border-color: rgba(46,204,113,0.2); }
+.history-icon.deposit { background: linear-gradient(135deg, rgba(46,204,113,0.15), rgba(46,204,113,0.04)); color: var(--success); border-color: rgba(46,204,113,0.2); }
+.history-icon.withdraw { background: linear-gradient(135deg, rgba(231,76,60,0.15), rgba(231,76,60,0.04)); color: #ff6b5b; border-color: rgba(231,76,60,0.2); }
+.history-info { flex: 1; min-width: 0; }
+.history-title { font-size: 12.5px; font-weight: 700; letter-spacing: -0.1px; }
+.history-time { font-size: 10px; color: var(--text-muted); margin-top: 3px; font-weight: 500; }
+.history-amount { font-size: 13.5px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.2px; }
+.history-amount.positive { color: #4ade80; text-shadow: 0 0 12px rgba(74,222,128,0.3); }
+.history-amount.negative { color: #ff6b5b; }
+.history-amount.neutral { color: var(--text-primary); }
+
+.ref-hero { background: linear-gradient(135deg, rgba(212, 175, 55, 0.14) 0%, rgba(212, 175, 55, 0.02) 60%, rgba(255,255,255,0.02) 100%); border: 1px solid var(--border-accent); border-radius: 18px; padding: 22px; margin-bottom: 14px; position: relative; overflow: hidden; box-shadow: 0 12px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06); }
+.ref-hero::after { content: ''; position: absolute; top: -40%; right: -20%; width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, rgba(212, 175, 55, 0.22) 0%, transparent 70%); animation: floatBlob 7s ease-in-out infinite; pointer-events: none; }
+.ref-hero::before { content: '🎁'; position: absolute; top: 14px; right: 18px; font-size: 32px; opacity: 0.35; transform: rotate(-12deg); filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4)); }
+.ref-hero h2 { font-size: 16px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.2px; position: relative; z-index: 1; }
+.ref-hero p { font-size: 12px; color: var(--text-secondary); line-height: 1.65; position: relative; z-index: 1; }
+.ref-hero strong { color: var(--gold-soft); font-weight: 800; }
+.ref-code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 28px; font-weight: 800; letter-spacing: 5px; color: var(--gold-soft); text-align: center; margin: 10px 0 16px; text-shadow: 0 0 24px rgba(212, 175, 55, 0.5), 0 2px 4px rgba(0,0,0,0.5); padding: 12px; background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(212, 175, 55, 0.02)); border: 1px dashed rgba(212, 175, 55, 0.35); border-radius: 14px; position: relative; }
+.ref-link-box { background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-subtle); border-radius: 13px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; margin-bottom: 12px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.03); }
+.ref-link { flex: 1; min-width: 0; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11px; color: var(--gold-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; letter-spacing: 0.3px; font-weight: 600; }
+.ref-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.ref-list-item { display: flex; align-items: center; gap: 11px; padding: 11px 13px; background: var(--bg-panel); border: 1px solid var(--border-subtle); border-radius: 12px; font-size: 12px; backdrop-filter: blur(10px); animation: slideIn 0.35s ease backwards; }
+.ref-list-item .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #a855f7); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: white; box-shadow: 0 3px 10px rgba(59, 130, 246, 0.35); }
+.ref-list-item .name { flex: 1; font-weight: 700; }
+.ref-list-item .earn { color: #4ade80; font-weight: 800; font-variant-numeric: tabular-nums; text-shadow: 0 0 10px rgba(74,222,128,0.25); }
+
+.empty-state { text-align: center; padding: 50px 20px; color: var(--text-muted); font-size: 12px; position: relative; }
+.empty-state .icon { font-size: 42px; margin-bottom: 14px; opacity: 0.35; filter: grayscale(0.5); }
+.empty-state .title { color: var(--text-secondary); font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+
+.section-title { font-size: 10.5px; color: var(--text-muted); letter-spacing: 1.6px; text-transform: uppercase; font-weight: 800; margin: 20px 0 11px; display: flex; align-items: center; gap: 8px; }
+.section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, rgba(212,175,55,0.2), transparent); }
+.section-title:first-child { margin-top: 0; }
+
+/* ============= MODAL ============= */
+.modal-overlay { position: fixed; inset: 0; background: rgba(5, 10, 20, 0.78); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 24px; z-index: 999; opacity: 0; pointer-events: none; transition: opacity 0.25s ease; }
+.modal-overlay.show { opacity: 1; pointer-events: auto; }
+.modal { width: 100%; max-width: 350px; background: linear-gradient(180deg, #16294a 0%, #0d1a30 100%); border: 1px solid rgba(212, 175, 55, 0.25); border-radius: 20px; padding: 24px 22px 20px; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255,255,255,0.08); transform: scale(0.88) translateY(14px); transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1); max-height: 82vh; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+.modal::before { content: ''; position: absolute; top: -50%; left: -20%; width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, transparent 70%); pointer-events: none; }
+.modal-overlay.show .modal { transform: scale(1) translateY(0); }
+.modal-icon { width: 58px; height: 58px; border-radius: 18px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 26px; background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(212, 175, 55, 0.05)); border: 1px solid rgba(212, 175, 55, 0.3); color: var(--gold-soft); box-shadow: 0 8px 24px rgba(212, 175, 55, 0.2), inset 0 1px 0 rgba(255,255,255,0.1); position: relative; z-index: 1; animation: iconPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+@keyframes iconPop { from{transform:scale(0.5) rotate(-15deg);opacity:0} to{transform:scale(1) rotate(0);opacity:1} }
+.modal-icon.success { background: linear-gradient(135deg, rgba(46, 204, 113, 0.22), rgba(46, 204, 113, 0.05)); border-color: rgba(46, 204, 113, 0.35); color: #4ade80; }
+.modal-icon.error { background: linear-gradient(135deg, rgba(231, 76, 60, 0.22), rgba(231, 76, 60, 0.05)); border-color: rgba(231, 76, 60, 0.35); color: #ff6b5b; }
+.modal-title { font-size: 18px; font-weight: 800; text-align: center; letter-spacing: -0.2px; position: relative; z-index: 1; }
+.modal-message { font-size: 13px; color: var(--text-secondary); text-align: center; margin-top: 10px; line-height: 1.6; white-space: pre-line; overflow-y: auto; position: relative; z-index: 1; }
+.modal-message strong { color: var(--gold-soft); font-weight: 800; }
+.modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 22px; position: relative; z-index: 1; }
+.modal-actions.single { grid-template-columns: 1fr; }
+.modal-btn { padding: 14px 0; border-radius: 12px; border: none; outline: none; font-size: 13px; font-weight: 800; letter-spacing: 0.6px; cursor: pointer; transition: transform 0.12s ease, filter 0.2s; text-transform: uppercase; }
+.modal-btn:active { transform: scale(0.97); }
+.modal-btn.confirm { background: linear-gradient(135deg, #f0d57a 0%, #d4af37 50%, #a3841f 100%); color: #0a1428; box-shadow: 0 6px 18px rgba(212, 175, 55, 0.28), inset 0 1px 0 rgba(255,255,255,0.3); }
+.modal-btn.cancel { background: rgba(255, 255, 255, 0.06); color: var(--text-primary); border: 1px solid rgba(255, 255, 255, 0.09); }
+
+/* ============= LANGUAGE PICKER ============= */
+.lang-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; max-height: 55vh; overflow-y: auto; }
+.lang-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; cursor: pointer; transition: background 0.2s, border-color 0.2s, transform 0.1s; font-size: 14px; font-weight: 700; }
+.lang-item:active { transform: scale(0.98); }
+.lang-item.active { background: rgba(212, 175, 55, 0.10); border-color: rgba(212, 175, 55, 0.35); }
+.lang-item .flag-icon { font-size: 26px; line-height: 1; }
+.lang-item .lang-name { flex: 1; }
+.lang-item .check { color: var(--gold); font-weight: 800; }
+
+/* ============= PROFILE ============= */
+.profile-header { padding: 18px 18px 22px; background: linear-gradient(135deg, rgba(212,175,55,0.10), rgba(212,175,55,0.02)); border: 1px solid var(--border-accent); border-radius: 18px; margin-top: 8px; display: flex; align-items: center; gap: 14px; position: relative; overflow: hidden; }
+.profile-header::after { content: ''; position: absolute; top: -50%; right: -25%; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(212,175,55,0.20) 0%, transparent 70%); pointer-events: none; }
+.profile-avatar { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, #f0d57a, #8a6d1c); display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; color: #0a1428; box-shadow: 0 6px 18px rgba(212,175,55,0.3); z-index: 1; }
+.profile-info { flex: 1; position: relative; z-index: 1; }
+.profile-name { font-size: 16px; font-weight: 800; }
+.profile-id { font-size: 10.5px; color: var(--text-muted); margin-top: 2px; font-family: ui-monospace, Menlo, monospace; }
+
+.balance-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 18px; background: var(--bg-panel); border: 1px solid var(--border-subtle); border-radius: 14px; margin-top: 12px; }
+.balance-row .label { font-size: 12px; color: var(--text-secondary); font-weight: 600; }
+.balance-row .amount { font-size: 20px; font-weight: 800; color: var(--gold-soft); font-variant-numeric: tabular-nums; }
+.balance-row .amount small { font-size: 11px; color: var(--text-muted); margin-left: 4px; font-weight: 600; }
+
+.deposit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.deposit-tier { background: var(--bg-panel); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 16px 12px; text-align: center; cursor: pointer; transition: transform 0.15s, border-color 0.2s, background 0.2s; position: relative; overflow: hidden; }
+.deposit-tier::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(212,175,55,0.10), transparent 60%); opacity: 0; transition: opacity 0.2s; }
+.deposit-tier:active { transform: scale(0.97); }
+.deposit-tier:active::before { opacity: 1; }
+.deposit-tier .usd { font-size: 22px; font-weight: 800; color: var(--gold-soft); letter-spacing: -0.5px; }
+.deposit-tier .stars { font-size: 10.5px; color: var(--text-muted); margin-top: 4px; font-weight: 600; }
+.deposit-tier .tier-label { font-size: 9px; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 800; margin-top: 8px; }
+
+.settings-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: var(--bg-panel); border: 1px solid var(--border-subtle); border-radius: 14px; cursor: pointer; margin-bottom: 10px; transition: background 0.2s, border-color 0.2s, transform 0.1s; }
+.settings-item:active { transform: scale(0.985); border-color: rgba(212,175,55,0.3); }
+.settings-item .s-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.04)); border: 1px solid rgba(212,175,55,0.2); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.settings-item .s-info { flex: 1; }
+.settings-item .s-title { font-size: 13px; font-weight: 700; }
+.settings-item .s-sub { font-size: 10.5px; color: var(--text-muted); margin-top: 2px; font-weight: 500; }
+.settings-item .s-value { font-size: 12px; color: var(--gold-soft); font-weight: 700; display: flex; align-items: center; gap: 6px; }
+.settings-item .s-arrow { color: var(--text-muted); font-size: 14px; }
+
+/* ============= TOAST / CONFETTI / LOADING ============= */
+.toast { position: fixed; left: 50%; bottom: calc(90px + env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(24px); background: linear-gradient(135deg, rgba(22, 41, 74, 0.98), rgba(13, 26, 48, 0.98)); border: 1px solid rgba(212, 175, 55, 0.3); color: var(--text-primary); padding: 11px 20px; border-radius: 13px; font-size: 12px; font-weight: 700; letter-spacing: 0.4px; opacity: 0; pointer-events: none; transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 1000; box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255,255,255,0.08); white-space: nowrap; max-width: 90vw; overflow: hidden; text-overflow: ellipsis; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.confetti-layer { position: fixed; inset: 0; pointer-events: none; z-index: 1001; overflow: hidden; }
+.confetti { position: absolute; top: -12px; width: 8px; height: 12px; border-radius: 2px; animation: confettiFall linear forwards; }
+@keyframes confettiFall { 0%{transform:translateY(0) rotate(0);opacity:1} 100%{transform:translateY(110vh) rotate(720deg);opacity:0} }
+
+@keyframes valueFlash { 0%{color:var(--gold-soft);transform:scale(1.08)} 100%{color:inherit;transform:scale(1)} }
+.flash { animation: valueFlash 0.5s ease; display: inline-block; }
+
+.loading-overlay { position: fixed; inset: 0; z-index: 2000; background: linear-gradient(180deg, #0d1a30 0%, #050a15 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; transition: opacity 0.4s ease; }
+.loading-overlay.hide { opacity: 0; pointer-events: none; }
+.loading-logo { width: 60px; height: 60px; border-radius: 16px; background: linear-gradient(135deg, #f0d57a 0%, #d4af37 45%, #8a6d1c 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4); animation: logoFloat 2s ease-in-out infinite; }
+@keyframes logoFloat { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-8px) scale(1.03)} }
+.loading-logo svg { width: 32px; height: 32px; }
+.loading-title { font-size: 20px; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(135deg, #fff 0%, #e8c874 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.loading-spinner { width: 28px; height: 28px; border-radius: 50%; border: 2px solid rgba(212, 175, 55, 0.2); border-top-color: var(--gold); animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-status { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- SVG Gradient tanımları -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+        <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#a3841f"/>
+            <stop offset="50%" stop-color="#f0d57a"/>
+            <stop offset="100%" stop-color="#d4af37"/>
+        </linearGradient>
+        <linearGradient id="crystalGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#f0d57a"/>
+            <stop offset="100%" stop-color="#8a6d1c"/>
+        </linearGradient>
+    </defs>
+</svg>
+
+<!-- ============= LOADING OVERLAY ============= -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-logo">
+        <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 2L4 7V17L12 22L20 17V7L12 2Z" stroke="#0a1428" stroke-width="2.2" stroke-linejoin="round"/>
+            <path d="M12 8L8 10.5V15.5L12 18L16 15.5V10.5L12 8Z" fill="#0a1428"/>
+        </svg>
+    </div>
+    <div class="loading-title">Astra Mining</div>
+    <div class="loading-spinner"></div>
+    <div class="loading-status" id="loadingStatus">Connecting...</div>
+</div>
+
+<!-- ============= APP CONTAINER ============= -->
+<div class="app-container">
+    <div class="screens">
+
+        <!-- ============================================= -->
+        <!-- SCREEN 1: DASHBOARD                           -->
+        <!-- ============================================= -->
+        <div class="screen active" id="screen-dashboard">
+            <div class="topbar">
+                <div class="brand">
+                    <div class="brand-mark">
+                        <svg viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2L4 7V17L12 22L20 17V7L12 2Z" stroke="#0a1428" stroke-width="2.2" stroke-linejoin="round"/>
+                            <path d="M12 8L8 10.5V15.5L12 18L16 15.5V10.5L12 8Z" fill="#0a1428"/>
+                        </svg>
+                    </div>
+                    <div class="brand-text">
+                        <div class="brand-title">Astra Mining</div>
+                        <div class="brand-sub" data-i18n="brand_sub">AI Agent Platform</div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <div class="status-pill">
+                        <span class="status-dot"></span>
+                        <span data-i18n="status_active">ACTIVE</span>
+                    </div>
+                    <div class="icon-btn" onclick="openLanguagePicker()" title="Language">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="9"/>
+                            <path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="balance-card">
+                <div class="balance-label">
+                    <span data-i18n="balance_total">Total Balance</span>
+                    <div class="flag" id="currentFlagDisplay">🇬🇧</div>
+                </div>
+                <div class="balance-value">
+                    <span id="balanceUsd">0.0000</span>
+                    <span class="unit">USD</span>
+                </div>
+                <div class="balance-change">
+                    <span>▲</span>
+                    <span id="balanceChange">+0.00% <span data-i18n="balance_today">today</span></span>
+                </div>
+            </div>
+
+            <div class="hero">
+                <div class="mining-stage">
+                    <div class="glow-pulse"></div>
+                    <div class="orbit orbit-1"><div class="orbit-dot"></div></div>
+                    <div class="orbit orbit-2"><div class="orbit-dot"></div></div>
+                    <div class="orbit orbit-3"><div class="orbit-dot"></div></div>
+                    <svg class="progress-arc" viewBox="0 0 240 240">
+                        <circle class="track" cx="120" cy="120" r="112"/>
+                        <circle class="bar" id="progressBar" cx="120" cy="120" r="112"
+                            stroke-dasharray="703.7" stroke-dashoffset="703.7"/>
+                    </svg>
+                    <div class="core">
+                        <svg class="core-crystal" viewBox="0 0 100 100">
+                            <polygon points="50,8 82,32 82,68 50,92 18,68 18,32" fill="url(#crystalGrad)" opacity="0.95"/>
+                            <polygon points="50,8 50,92 18,68 18,32" fill="#fff" opacity="0.18"/>
+                            <polygon points="50,8 82,32 50,50" fill="#fff" opacity="0.28"/>
+                        </svg>
+                        <div class="core-label" data-i18n="timer_next">NEXT</div>
+                        <div class="timer-display" id="timer">00:00:00</div>
+                    </div>
+                </div>
+                <div class="hex-caption">
+                    <strong id="cycleInfo">12h</strong>
+                    <span data-i18n="timer_cycle">mining cycle</span>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span data-i18n="stat_token">Token</span>
+                        <div class="stat-icon">◆</div>
+                    </div>
+                    <div class="stat-value"><span id="tokenVal">0.0000</span></div>
+                    <div class="stat-progress"><div class="stat-progress-bar" id="tokenBar" style="width:0%"></div></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span data-i18n="stat_power">Hash Power</span>
+                        <div class="stat-icon blue">⚡</div>
+                    </div>
+                    <div class="stat-value">
+                        <span id="powerVal">0.00</span>
+                        <small>TH/s</small>
+                    </div>
+                    <div class="stat-progress"><div class="stat-progress-bar blue" id="powerBar" style="width:10%"></div></div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-secondary" onclick="handleSell()">
+                    <span>↑</span> <span data-i18n="btn_sell">Sell Token</span>
+                </button>
+                <button class="btn btn-primary" onclick="handleQuickUpgrade()">
+                    <span>⚡</span> <span data-i18n="btn_upgrade">Upgrade</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ============================================= -->
+        <!-- SCREEN 2: AGENTS                              -->
+        <!-- ============================================= -->
+        <div class="screen" id="screen-agents">
+            <div class="screen-header">
+                <h1 data-i18n="screen_agents">Agents</h1>
+                <span class="badge" id="agentCountBadge">0</span>
+            </div>
+            <div class="section-title" data-i18n="section_owned">YOUR AGENTS</div>
+            <div class="agent-list" id="agentList"></div>
+            <div class="section-title" data-i18n="section_shop">BUY NEW AGENT</div>
+            <div class="shop-list" id="shopList"></div>
+        </div>
+
+        <!-- ============================================= -->
+        <!-- SCREEN 3: HISTORY                             -->
+        <!-- ============================================= -->
+        <div class="screen" id="screen-history">
+            <div class="screen-header">
+                <h1 data-i18n="screen_history">History</h1>
+                <span class="badge" id="historyCountBadge">0</span>
+            </div>
+            <div class="history-list" id="historyList"></div>
+        </div>
+
+        <!-- ============================================= -->
+        <!-- SCREEN 4: REFERRAL                            -->
+        <!-- ============================================= -->
+        <div class="screen" id="screen-referral">
+            <div class="screen-header">
+                <h1 data-i18n="screen_referral">Referral</h1>
+                <span class="badge">3%</span>
+            </div>
+            <div class="ref-hero">
+                <h2 data-i18n="ref_title">Invite Friends</h2>
+                <p data-i18n="ref_desc">Earn 3% of every friend's mining income, paid instantly.</p>
+            </div>
+            <div class="section-title" data-i18n="section_your_code">YOUR INVITE CODE</div>
+            <div class="ref-code" id="refCode">------</div>
+            <div class="ref-link-box">
+                <div class="ref-link" id="refLink">loading...</div>
+                <button class="btn btn-secondary btn-sm" onclick="copyRefLink()" data-i18n="btn_copy">Copy</button>
+            </div>
+            <div class="actions" style="grid-template-columns:1fr;">
+                <button class="btn btn-primary" onclick="shareRefLink()">
+                    ↗ <span data-i18n="btn_share">Share on Telegram</span>
+                </button>
+            </div>
+            <div class="section-title" data-i18n="section_stats">STATISTICS</div>
+            <div class="ref-stats">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span data-i18n="ref_invited">Invited</span>
+                        <div class="stat-icon">👥</div>
+                    </div>
+                    <div class="stat-value"><span id="refInvited">0</span></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span data-i18n="ref_earnings">Earnings</span>
+                        <div class="stat-icon">◆</div>
+                    </div>
+                    <div class="stat-value">
+                        <span id="refEarnings">0.0000</span>
+                        <small>ASTRA</small>
+                    </div>
+                </div>
+            </div>
+            <div class="section-title" data-i18n="section_referred">YOUR REFERRALS</div>
+            <div id="refList"></div>
+        </div>
+
+        <!-- ============================================= -->
+        <!-- SCREEN 5: PROFILE                             -->
+        <!-- ============================================= -->
+        <div class="screen" id="screen-profile">
+            <div class="screen-header">
+                <h1 data-i18n="profile_title">Profile</h1>
+                <span class="badge" id="profileLangBadge">EN</span>
+            </div>
+
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">A</div>
+                <div class="profile-info">
+                    <div class="profile-name" id="profileName">User</div>
+                    <div class="profile-id" id="profileId">ID: —</div>
+                </div>
+            </div>
+
+            <div class="balance-row">
+                <div class="label" data-i18n="profile_balance">USD Balance</div>
+                <div class="amount">
+                    <span id="profileUsdBalance">0.0000</span>
+                    <small>USD</small>
+                </div>
+            </div>
+
+            <div class="actions" style="margin-top:12px;">
+                <button class="btn btn-primary" onclick="openDeposit()">
+                    + <span data-i18n="profile_deposit">Deposit</span>
+                </button>
+                <button class="btn btn-secondary" onclick="openWithdraw()">
+                    ↓ <span data-i18n="profile_withdraw">Withdraw</span>
+                </button>
+            </div>
+
+            <div class="section-title" data-i18n="profile_language">Language</div>
+            <div class="settings-item" onclick="openLanguagePicker()">
+                <div class="s-icon">🌐</div>
+                <div class="s-info">
+                    <div class="s-title" data-i18n="lang_title">Language</div>
+                    <div class="s-sub" id="currentLangName">English</div>
+                </div>
+                <div class="s-value" id="currentLangFlagSmall">🇬🇧</div>
+                <div class="s-arrow">›</div>
+            </div>
+
+            <div class="section-title" id="depositSectionTitle" data-i18n="profile_deposit">Deposit Packages</div>
+            <div class="deposit-grid" id="depositGrid"></div>
+        </div>
+
+    </div>
+
+    <!-- ============= BOTTOM NAV ============= -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" data-screen="dashboard" onclick="showScreen('dashboard')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+                <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+                <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+                <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+            </svg>
+            <span data-i18n="nav_dashboard">Panel</span>
+        </button>
+        <button class="nav-item" data-screen="agents" onclick="showScreen('agents')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="6" y="6" width="12" height="12" rx="2.5"/>
+                <path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/>
+            </svg>
+            <span data-i18n="nav_agents">Agents</span>
+        </button>
+        <button class="nav-item" data-screen="history" onclick="showScreen('history')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 7v5l3 2"/>
+            </svg>
+            <span data-i18n="nav_history">History</span>
+        </button>
+        <button class="nav-item" data-screen="referral" onclick="showScreen('referral')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            <span data-i18n="nav_referral">Invite</span>
+        </button>
+        <button class="nav-item" data-screen="profile" onclick="showScreen('profile')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M4 21v-2a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v2"/>
+            </svg>
+            <span data-i18n="nav_profile">Profile</span>
+        </button>
+    </nav>
+</div>
+
+<!-- ============= MODAL ============= -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <div class="modal-icon" id="modalIcon">✦</div>
+        <div class="modal-title" id="modalTitle">Title</div>
+        <div class="modal-message" id="modalMessage">Message</div>
+        <div class="modal-actions" id="modalActions"></div>
+    </div>
+</div>
+
+<!-- ============= TOAST & CONFETTI ============= -->
+<div class="toast" id="toast"></div>
+<div class="confetti-layer" id="confettiLayer"></div>
+<script>
+/* =========================================================================
+   ASTRA MINING v3.2.0 — Multi-Language + Payments + Server-Auth
+   ========================================================================= */
+
+const CONFIG = {
+    BOT_USERNAME: 'AstraMiningBot',
+    API_BASE: 'https://YOUR_DOMAIN.com',
+    DEFAULT_LANG: 'en',
+};
+
+const TIERS = {
+    starter: { name: 'Starter', icon: '🤖', basePower: 1.0,  cost: 0,   color: '#8892a6', alpha: 'rgba(136,146,166,0.15)' },
+    pro:     { name: 'Pro',     icon: '⚙️', basePower: 2.5,  cost: 10,  color: '#3b82f6', alpha: 'rgba(59,130,246,0.15)' },
+    elite:   { name: 'Elite',   icon: '🚀', basePower: 6.0,  cost: 40,  color: '#a855f7', alpha: 'rgba(168,85,247,0.15)' },
+    quantum: { name: 'Quantum', icon: '💎', basePower: 15.0, cost: 150, color: '#d4af37', alpha: 'rgba(212,175,55,0.15)' },
+    titan:   { name: 'Titan',   icon: '👑', basePower: 40.0, cost: 600, color: '#f0d57a', alpha: 'rgba(240,213,122,0.15)' },
+};
+
+/* =========================================================================
+   LOCALES — 5 dil
+   ========================================================================= */
+const LOCALES = {
+en: { _n:'English', _f:'🇬🇧',
+  nav_dashboard:'Panel', nav_agents:'Agents', nav_history:'History', nav_referral:'Invite', nav_profile:'Profile',
+  brand_sub:'AI Agent Platform', status_active:'ACTIVE',
+  balance_total:'Total Balance', balance_today:'today',
+  timer_next:'NEXT', timer_cycle:'mining cycle',
+  stat_token:'Token', stat_power:'Hash Power',
+  btn_sell:'Sell Token', btn_upgrade:'Upgrade', btn_cancel:'Cancel', btn_confirm:'Confirm', btn_ok:'OK',
+  btn_copy:'Copy', btn_share:'Share on Telegram',
+  screen_agents:'Agents', screen_history:'History', screen_referral:'Referral',
+  section_owned:'YOUR AGENTS', section_shop:'BUY NEW AGENT', section_your_code:'YOUR INVITE CODE',
+  section_stats:'STATISTICS', section_referred:'YOUR REFERRALS',
+  ref_title:'Invite Friends', ref_desc:"Earn 3% of every friend's mining income, paid instantly.",
+  ref_invited:'Invited', ref_earnings:'Earnings', ref_empty:"You haven't invited anyone yet",
+  msg_insufficient:'Insufficient Balance', msg_min_sell:'Minimum sale is {min} ASTRA.',
+  msg_sell_success:'Sale Successful', msg_buy_success:'Agent Activated',
+  msg_upgrade_success:'Upgrade Successful', msg_error:'Something went wrong',
+  msg_rate_limit:'Too fast, slow down', msg_copied:'Copied', msg_connection_error:'Connection error',
+  modal_sell_title:'Sell Tokens for USD', modal_sell_amount:'Earned tokens',
+  modal_sell_rate:'Exchange rate', modal_sell_fee:'Fee', modal_sell_net:'You will receive',
+  profile_title:'Profile', profile_language:'Language', profile_balance:'USD Balance',
+  profile_deposit:'Deposit', profile_withdraw:'Withdraw', profile_history:'Transactions',
+  deposit_title:'Add Funds', deposit_desc:'Choose an amount. Delivered instantly via Telegram Stars.',
+  deposit_processing:'Processing...', deposit_success:'Funds Added',
+  withdraw_title:'Withdraw', withdraw_desc:'Minimum {min} USDT. {fee}% processing fee.',
+  withdraw_processing:'Processing...', withdraw_success:'Withdrawal Requested',
+  withdraw_too_low:'Minimum withdrawal is {min} USDT',
+  lang_title:'Language', lang_subtitle:'Choose your preferred language',
+  loading_connecting:'Connecting...', loading_syncing:'Syncing...',
+  offline_warn:'Opened outside Telegram', api_missing:'API endpoint not configured',
+  min_withdraw_note:'Minimum withdrawal: {min} USD',
+  withdraw_available:'Available: {amount} USD',
+  deposit_stars:'{stars} Stars', deposit_usd:'{usd} USD', pack_label:'Package',
+  no_transactions:'No transactions yet',
+  insufficient_msg:'Minimum {min} ASTRA required to sell',
+  err_below_min:'Below minimum', err_insufficient:'Insufficient funds',
+},
+tr: { _n:'Türkçe', _f:'🇹🇷',
+  nav_dashboard:'Panel', nav_agents:'Ajanlar', nav_history:'Geçmiş', nav_referral:'Davet', nav_profile:'Profil',
+  brand_sub:'AI Ajan Platformu', status_active:'AKTİF',
+  balance_total:'Toplam Bakiye', balance_today:'bugün',
+  timer_next:'SONRAKİ', timer_cycle:'kazım döngüsü',
+  stat_token:'Token', stat_power:'Hash Gücü',
+  btn_sell:'Token Sat', btn_upgrade:'Yükselt', btn_cancel:'İptal', btn_confirm:'Onayla', btn_ok:'Tamam',
+  btn_copy:'Kopyala', btn_share:"Telegram'da Paylaş",
+  screen_agents:'Ajanlar', screen_history:'Geçmiş', screen_referral:'Referans',
+  section_owned:'SAHİP OLDUKLARIN', section_shop:'YENİ AJAN AL', section_your_code:'DAVET KODUN',
+  section_stats:'İSTATİSTİKLER', section_referred:'DAVET ETTİKLERİN',
+  ref_title:'Arkadaşını Davet Et', ref_desc:'Davet ettiğin her kişinin kazancından %3 anında kazanırsın.',
+  ref_invited:'Davet Edilen', ref_earnings:'Kazanç', ref_empty:'Henüz kimseyi davet etmedin',
+  msg_insufficient:'Yetersiz Bakiye', msg_min_sell:'Minimum satış {min} ASTRA.',
+  msg_sell_success:'Satış Başarılı', msg_buy_success:'Ajan Aktif',
+  msg_upgrade_success:'Yükseltme Başarılı', msg_error:'Bir şeyler ters gitti',
+  msg_rate_limit:'Çok hızlı, yavaşla', msg_copied:'Kopyalandı', msg_connection_error:'Bağlantı hatası',
+  modal_sell_title:"Token'ları USD'ye takas et", modal_sell_amount:'Kazanılan token',
+  modal_sell_rate:'Takas kuru', modal_sell_fee:'Komisyon', modal_sell_net:'Alacağınız',
+  profile_title:'Profil', profile_language:'Dil', profile_balance:'USD Bakiye',
+  profile_deposit:'Yatır', profile_withdraw:'Çek', profile_history:'İşlemler',
+  deposit_title:'Bakiye Yükle', deposit_desc:'Miktar seç. Telegram Stars ile anında yüklenir.',
+  deposit_processing:'İşleniyor...', deposit_success:'Bakiye Yüklendi',
+  withdraw_title:'Para Çek', withdraw_desc:'Minimum {min} USDT. %{fee} işlem ücreti.',
+  withdraw_processing:'İşleniyor...', withdraw_success:'Çekim Talebi Alındı',
+  withdraw_too_low:'Minimum çekim {min} USDT',
+  lang_title:'Dil', lang_subtitle:'Tercih ettiğin dili seç',
+  loading_connecting:'Bağlanıyor...', loading_syncing:'Senkronize ediliyor...',
+  offline_warn:'Telegram dışında açıldı', api_missing:'API adresi tanımlı değil',
+  min_withdraw_note:'Minimum çekim: {min} USD',
+  withdraw_available:'Kullanılabilir: {amount} USD',
+  deposit_stars:'{stars} Stars', deposit_usd:'{usd} USD', pack_label:'Paket',
+  no_transactions:'Henüz işlem yok',
+  insufficient_msg:'Satış için minimum {min} ASTRA gerekli',
+  err_below_min:'Minimum altında', err_insufficient:'Yetersiz bakiye',
+},
+es: { _n:'Español', _f:'🇪🇸',
+  nav_dashboard:'Panel', nav_agents:'Agentes', nav_history:'Historial', nav_referral:'Invitar', nav_profile:'Perfil',
+  brand_sub:'Plataforma de Agentes IA', status_active:'ACTIVO',
+  balance_total:'Saldo Total', balance_today:'hoy',
+  timer_next:'SIGUIENTE', timer_cycle:'ciclo de minería',
+  stat_token:'Token', stat_power:'Poder Hash',
+  btn_sell:'Vender Token', btn_upgrade:'Mejorar', btn_cancel:'Cancelar', btn_confirm:'Confirmar', btn_ok:'OK',
+  btn_copy:'Copiar', btn_share:'Compartir en Telegram',
+  screen_agents:'Agentes', screen_history:'Historial', screen_referral:'Referidos',
+  section_owned:'TUS AGENTES', section_shop:'COMPRAR NUEVO AGENTE', section_your_code:'TU CÓDIGO',
+  section_stats:'ESTADÍSTICAS', section_referred:'TUS REFERIDOS',
+  ref_title:'Invita a tus Amigos', ref_desc:'Gana 3% de los ingresos de cada amigo, al instante.',
+  ref_invited:'Invitados', ref_earnings:'Ganancias', ref_empty:'Aún no has invitado a nadie',
+  msg_insufficient:'Saldo Insuficiente', msg_min_sell:'Venta mínima {min} ASTRA.',
+  msg_sell_success:'Venta Exitosa', msg_buy_success:'Agente Activado',
+  msg_upgrade_success:'Mejora Exitosa', msg_error:'Algo salió mal',
+  msg_rate_limit:'Demasiado rápido', msg_copied:'Copiado', msg_connection_error:'Error de conexión',
+  modal_sell_title:'Cambiar Tokens por USD', modal_sell_amount:'Tokens ganados',
+  modal_sell_rate:'Tipo de cambio', modal_sell_fee:'Comisión', modal_sell_net:'Recibirás',
+  profile_title:'Perfil', profile_language:'Idioma', profile_balance:'Saldo USD',
+  profile_deposit:'Depositar', profile_withdraw:'Retirar', profile_history:'Transacciones',
+  deposit_title:'Añadir Fondos', deposit_desc:'Elige un monto. Acreditado al instante vía Telegram Stars.',
+  deposit_processing:'Procesando...', deposit_success:'Fondos Añadidos',
+  withdraw_title:'Retirar', withdraw_desc:'Mínimo {min} USDT. Comisión del {fee}%.',
+  withdraw_processing:'Procesando...', withdraw_success:'Solicitud Enviada',
+  withdraw_too_low:'Retiro mínimo {min} USDT',
+  lang_title:'Idioma', lang_subtitle:'Elige tu idioma preferido',
+  loading_connecting:'Conectando...', loading_syncing:'Sincronizando...',
+  offline_warn:'Abierto fuera de Telegram', api_missing:'Endpoint API no configurado',
+  min_withdraw_note:'Retiro mínimo: {min} USD',
+  withdraw_available:'Disponible: {amount} USD',
+  deposit_stars:'{stars} Estrellas', deposit_usd:'{usd} USD', pack_label:'Paquete',
+  no_transactions:'Sin transacciones aún',
+  insufficient_msg:'Mínimo {min} ASTRA para vender',
+  err_below_min:'Por debajo del mínimo', err_insufficient:'Fondos insuficientes',
+},
+de: { _n:'Deutsch', _f:'🇩🇪',
+  nav_dashboard:'Panel', nav_agents:'Agenten', nav_history:'Verlauf', nav_referral:'Einladen', nav_profile:'Profil',
+  brand_sub:'KI-Agenten-Plattform', status_active:'AKTIV',
+  balance_total:'Gesamtguthaben', balance_today:'heute',
+  timer_next:'NÄCHSTER', timer_cycle:'Mining-Zyklus',
+  stat_token:'Token', stat_power:'Hash-Leistung',
+  btn_sell:'Token verkaufen', btn_upgrade:'Verbessern', btn_cancel:'Abbrechen', btn_confirm:'Bestätigen', btn_ok:'OK',
+  btn_copy:'Kopieren', btn_share:'Auf Telegram teilen',
+  screen_agents:'Agenten', screen_history:'Verlauf', screen_referral:'Empfehlung',
+  section_owned:'DEINE AGENTEN', section_shop:'NEUEN AGENTEN KAUFEN', section_your_code:'DEIN EINLADUNGSCODE',
+  section_stats:'STATISTIKEN', section_referred:'DEINE EMPFEHLUNGEN',
+  ref_title:'Freunde einladen', ref_desc:'Erhalte 3% aller Mining-Einnahmen deiner Freunde, sofort.',
+  ref_invited:'Eingeladen', ref_earnings:'Einnahmen', ref_empty:'Du hast noch niemanden eingeladen',
+  msg_insufficient:'Unzureichendes Guthaben', msg_min_sell:'Mindestverkauf {min} ASTRA.',
+  msg_sell_success:'Verkauf erfolgreich', msg_buy_success:'Agent aktiviert',
+  msg_upgrade_success:'Upgrade erfolgreich', msg_error:'Etwas ist schief gelaufen',
+  msg_rate_limit:'Zu schnell', msg_copied:'Kopiert', msg_connection_error:'Verbindungsfehler',
+  modal_sell_title:'Token in USD tauschen', modal_sell_amount:'Verdiente Token',
+  modal_sell_rate:'Wechselkurs', modal_sell_fee:'Gebühr', modal_sell_net:'Du erhältst',
+  profile_title:'Profil', profile_language:'Sprache', profile_balance:'USD-Guthaben',
+  profile_deposit:'Einzahlen', profile_withdraw:'Auszahlen', profile_history:'Transaktionen',
+  deposit_title:'Guthaben aufladen', deposit_desc:'Betrag wählen. Sofort per Telegram Stars.',
+  deposit_processing:'Verarbeitung...', deposit_success:'Guthaben aufgeladen',
+  withdraw_title:'Auszahlen', withdraw_desc:'Minimum {min} USDT. {fee}% Bearbeitungsgebühr.',
+  withdraw_processing:'Verarbeitung...', withdraw_success:'Auszahlung beantragt',
+  withdraw_too_low:'Mindestauszahlung {min} USDT',
+  lang_title:'Sprache', lang_subtitle:'Wähle deine bevorzugte Sprache',
+  loading_connecting:'Verbinden...', loading_syncing:'Synchronisieren...',
+  offline_warn:'Außerhalb von Telegram geöffnet', api_missing:'API-Endpunkt nicht konfiguriert',
+  min_withdraw_note:'Mindestauszahlung: {min} USD',
+  withdraw_available:'Verfügbar: {amount} USD',
+  deposit_stars:'{stars} Sterne', deposit_usd:'{usd} USD', pack_label:'Paket',
+  no_transactions:'Noch keine Transaktionen',
+  insufficient_msg:'Mindestens {min} ASTRA zum Verkauf nötig',
+  err_below_min:'Unter dem Minimum', err_insufficient:'Unzureichendes Guthaben',
+},
+ru: { _n:'Русский', _f:'🇷🇺',
+  nav_dashboard:'Панель', nav_agents:'Агенты', nav_history:'История', nav_referral:'Пригласить', nav_profile:'Профиль',
+  brand_sub:'Платформа ИИ-агентов', status_active:'АКТИВЕН',
+  balance_total:'Общий Баланс', balance_today:'сегодня',
+  timer_next:'ДАЛЕЕ', timer_cycle:'цикл майнинга',
+  stat_token:'Токен', stat_power:'Хеш-Мощность',
+  btn_sell:'Продать Токен', btn_upgrade:'Улучшить', btn_cancel:'Отмена', btn_confirm:'Подтвердить', btn_ok:'ОК',
+  btn_copy:'Копировать', btn_share:'Поделиться',
+  screen_agents:'Агенты', screen_history:'История', screen_referral:'Рефералы',
+  section_owned:'ВАШИ АГЕНТЫ', section_shop:'КУПИТЬ АГЕНТА', section_your_code:'ВАШ КОД',
+  section_stats:'СТАТИСТИКА', section_referred:'ВАШИ РЕФЕРАЛЫ',
+  ref_title:'Пригласите Друзей', ref_desc:'Получайте 3% от дохода каждого друга мгновенно.',
+  ref_invited:'Приглашено', ref_earnings:'Заработано', ref_empty:'Вы ещё никого не пригласили',
+  msg_insufficient:'Недостаточно Средств', msg_min_sell:'Минимум продажи {min} ASTRA.',
+  msg_sell_success:'Продажа Успешна', msg_buy_success:'Агент Активирован',
+  msg_upgrade_success:'Улучшение Успешно', msg_error:'Что-то пошло не так',
+  msg_rate_limit:'Слишком быстро', msg_copied:'Скопировано', msg_connection_error:'Ошибка Соединения',
+  modal_sell_title:'Обменять Токены на USD', modal_sell_amount:'Заработанные токены',
+  modal_sell_rate:'Курс', modal_sell_fee:'Комиссия', modal_sell_net:'Вы получите',
+  profile_title:'Профиль', profile_language:'Язык', profile_balance:'Баланс USD',
+  profile_deposit:'Пополнить', profile_withdraw:'Вывести', profile_history:'Транзакции',
+  deposit_title:'Пополнить Баланс', deposit_desc:'Выберите сумму. Мгновенно через Telegram Stars.',
+  deposit_processing:'Обработка...', deposit_success:'Средства Зачислены',
+  withdraw_title:'Вывод', withdraw_desc:'Минимум {min} USDT. Комиссия {fee}%.',
+  withdraw_processing:'Обработка...', withdraw_success:'Запрос на Вывод',
+  withdraw_too_low:'Минимум вывода {min} USDT',
+  lang_title:'Язык', lang_subtitle:'Выберите язык',
+  loading_connecting:'Подключение...', loading_syncing:'Синхронизация...',
+  offline_warn:'Открыто вне Telegram', api_missing:'API-эндпоинт не настроен',
+  min_withdraw_note:'Минимум вывода: {min} USD',
+  withdraw_available:'Доступно: {amount} USD',
+  deposit_stars:'{stars} Звёзд', deposit_usd:'{usd} USD', pack_label:'Пакет',
+  no_transactions:'Транзакций пока нет',
+  insufficient_msg:'Минимум {min} ASTRA для продажи',
+  err_below_min:'Ниже минимума', err_insufficient:'Недостаточно средств',
+},
+};
+
+let CURRENT_LANG = 'en';
+
+function t(key, vars = {}) {
+    const pack = LOCALES[CURRENT_LANG] || LOCALES.en;
+    let str = pack[key] ?? LOCALES.en[key] ?? key;
+    return String(str).replace(/\{(\w+)\}/g, (_, k) => vars[k] ?? `{${k}}`);
+}
+
+function applyI18n() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        el.textContent = t(el.dataset.i18n);
+    });
+    document.documentElement.lang = CURRENT_LANG;
+    if (typeof renderAgents === 'function') {
+        renderAgents();
+        renderReferral();
+        renderProfile();
+    }
+}
+
+/* =========================================================================
+   TELEGRAM INIT
+   ========================================================================= */
+const tg = window.Telegram?.WebApp;
+if (tg) { try { tg.ready(); } catch(e){} try { tg.expand(); } catch(e){} }
+
+function safeCall(fn) { try { const r = fn(); if (r?.catch) r.catch(()=>{}); } catch(e){} }
+
+const haptic = (() => {
+    const ok = tg && typeof tg.HapticFeedback !== 'undefined' && tg.isVersionAtLeast?.('6.1');
+    const v = (p) => { if (navigator.vibrate) try { navigator.vibrate(p); } catch(e){} };
+    return {
+        light:   () => ok ? safeCall(()=>tg.HapticFeedback.impactOccurred('light'))    : v(8),
+        medium:  () => ok ? safeCall(()=>tg.HapticFeedback.impactOccurred('medium'))   : v(15),
+        heavy:   () => ok ? safeCall(()=>tg.HapticFeedback.impactOccurred('heavy'))    : v(25),
+        success: () => ok ? safeCall(()=>tg.HapticFeedback.notificationOccurred('success')) : v([10,40,10]),
+        error:   () => ok ? safeCall(()=>tg.HapticFeedback.notificationOccurred('error'))   : v([40,30,40]),
+    };
+})();
+
+/* =========================================================================
+   MODAL
+   ========================================================================= */
+const modal = {
+    overlay: document.getElementById('modalOverlay'),
+    icon: document.getElementById('modalIcon'),
+    title: document.getElementById('modalTitle'),
+    message: document.getElementById('modalMessage'),
+    actions: document.getElementById('modalActions'),
+    show({ title, message, icon='✦', iconType='', buttons=[{ text:t('btn_ok'), type:'confirm' }] }) {
+        this.icon.textContent = icon;
+        this.icon.className = 'modal-icon' + (iconType ? ' ' + iconType : '');
+        this.title.textContent = title;
+        this.message.innerHTML = message;
+        this.actions.innerHTML = '';
+        this.actions.className = 'modal-actions' + (buttons.length === 1 ? ' single' : '');
+        buttons.forEach(btn => {
+            const el = document.createElement('button');
+            el.className = 'modal-btn ' + (btn.type === 'cancel' ? 'cancel' : 'confirm');
+            el.textContent = btn.text;
+            el.onclick = () => {
+                haptic.light();
+                this.hide();
+                if (typeof btn.onClick === 'function') btn.onClick();
+            };
+            this.actions.appendChild(el);
+        });
+        requestAnimationFrame(() => this.overlay.classList.add('show'));
+    },
+    hide() { this.overlay.classList.remove('show'); },
+};
+modal.overlay.addEventListener('click', e => { if (e.target === modal.overlay) modal.hide(); });
+
+/* =========================================================================
+   TOAST + CONFETTI + PARTICLES
+   ========================================================================= */
+let toastTimer;
+function showToast(text) {
+    const tt = document.getElementById('toast');
+    tt.textContent = text;
+    tt.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => tt.classList.remove('show'), 2400);
+}
+
+function spawnConfetti(count = 45) {
+    const layer = document.getElementById('confettiLayer');
+    const colors = ['#d4af37','#f0d57a','#2ecc71','#3b82f6','#a855f7','#fff'];
+    for (let i = 0; i < count; i++) {
+        const el = document.createElement('div');
+        el.className = 'confetti';
+        el.style.left = Math.random() * 100 + '%';
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.width = (6 + Math.random() * 6) + 'px';
+        el.style.height = (8 + Math.random() * 8) + 'px';
+        el.style.animationDelay = (Math.random() * 0.4) + 's';
+        el.style.animationDuration = (1.8 + Math.random() * 1.2) + 's';
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        layer.appendChild(el);
+        setTimeout(() => el.remove(), 3500);
+    }
+}
+
+(function() {
+    const stage = document.querySelector('.mining-stage');
+    if (!stage) return;
+    const colors = ['rgba(212,175,55,0.75)','rgba(59,130,246,0.6)','rgba(168,85,247,0.6)'];
+    for (let i = 0; i < 8; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = 2 + Math.random() * 3;
+        p.style.width = size + 'px'; p.style.height = size + 'px';
+        p.style.background = colors[Math.floor(Math.random() * colors.length)];
+        p.style.left = (10 + Math.random() * 80) + '%';
+        p.style.top = (60 + Math.random() * 30) + '%';
+        p.style.animationDuration = (4 + Math.random() * 3) + 's';
+        p.style.animationDelay = (Math.random() * 4) + 's';
+        p.style.boxShadow = `0 0 ${6 + size * 2}px currentColor`;
+        stage.appendChild(p);
+    }
+})();
+
+/* =========================================================================
+   API CLIENT
+   ========================================================================= */
+const api = {
+    initData: tg?.initData || '',
+    async call(endpoint, body = {}) {
+        const res = await fetch(`${CONFIG.API_BASE}/api${endpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type':'application/json', 'X-Init-Data': this.initData },
+            body: JSON.stringify({ initData: this.initData, ...body }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) { const e = new Error(data.error || `HTTP_${res.status}`); e.data = data; throw e; }
+        return data;
+    },
+    state()      { return this.call('/state'); },
+    sellTokens(a){ return this.call('/sell-tokens', { amount: a }); },
+    upgrade(id)  { return this.call('/upgrade', { agentId: id }); },
+    buy(tier)    { return this.call('/buy', { tier }); },
+    setLang(l)   { return this.call('/language', { lang: l }); },
+    depositTiers(){ return this.call('/deposit/tiers'); },
+    depositInvoice(usd, stars) { return this.call('/deposit/invoice', { usd, stars }); },
+    withdraw(amount) { return this.call('/withdraw', { amount }); },
+};
+
+/* =========================================================================
+   STATE
+   ========================================================================= */
+let state = {
+    userId: null, username: null, language: 'en', usdBalance: 0,
+    remaining: 0, tokens: 0, totalMined: 0, soldTotal: 0,
+    agents: [], history: [],
+    referral: { code:'------', invited:0, earnings:0, referredUsers: [] },
+};
+let serverConfig = {
+    TOKEN_TO_USD: 0.0001, SELL_FEE: 0.12, REFERRAL_PERCENT: 0.03,
+    CYCLE_SECONDS: 43200, MIN_SELL_ASTRA: 100,
+    MIN_WITHDRAW_USD: 10, WITHDRAW_FEE: 0.08,
+};
+let depositTiers = [
+    { usd: 5, stars: 300 }, { usd: 15, stars: 750 },
+    { usd: 50, stars: 2500 }, { usd: 150, stars: 7000 },
+];
+
+function getTotalPower() { return state.agents.reduce((s, a) => s + (a.power || 0), 0); }
+function getAgentPower(agent) {
+    const tier = TIERS[agent.tier] || TIERS.starter;
+    return tier.basePower * (1 + ((agent.level || 1) - 1) * 0.25);
+}
+function getAgentUpgradeCost(agent) {
+    const base = TIERS[agent.tier]?.cost || 5;
+    return base * 0.8 * Math.pow(2.4, (agent.level || 1) - 1);
+}
+
+async function refreshState(showError = true) {
+    try {
+        const res = await api.state();
+        state = res.state;
+        if (res.config) serverConfig = res.config;
+        if (res.tiers) Object.assign(TIERS, res.tiers);
+        if (state.language && LOCALES[state.language]) {
+            CURRENT_LANG = state.language;
+            localStorage.setItem('astra_lang', state.language);
+        }
+        applyI18n();
+        renderDashboard(); renderAgents(); renderHistory(); renderReferral(); renderProfile();
+        return true;
+    } catch (err) {
+        console.error('state refresh:', err);
+        if (showError) showToast(t('msg_connection_error'));
+        return false;
+    }
+}
+
+/* =========================================================================
+   FORMATTERS
+   ========================================================================= */
+function formatTime(sec) {
+    const h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
+    return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+function timeAgo(ts) {
+    const d = Math.floor((Date.now() - ts) / 1000);
+    if (d < 60) return 'now';
+    if (d < 3600) return Math.floor(d/60) + 'm';
+    if (d < 86400) return Math.floor(d/3600) + 'h';
+    return Math.floor(d/86400) + 'd';
+}
+function flashEl(el) { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+
+/* =========================================================================
+   RENDER — DASHBOARD
+   ========================================================================= */
+const el = {
+    timer: document.getElementById('timer'),
+    progressBar: document.getElementById('progressBar'),
+    tokenVal: document.getElementById('tokenVal'),
+    powerVal: document.getElementById('powerVal'),
+    balanceUsd: document.getElementById('balanceUsd'),
+    balanceChange: document.getElementById('balanceChange'),
+    tokenBar: document.getElementById('tokenBar'),
+    powerBar: document.getElementById('powerBar'),
+};
+const ARC_LEN = 2 * Math.PI * 112;
+
+function renderDashboard() {
+    const sec = Math.max(0, Math.floor(state.remaining || 0));
+    el.timer.textContent = formatTime(sec);
+    const ratio = 1 - (sec / serverConfig.CYCLE_SECONDS);
+    el.progressBar.style.strokeDashoffset = ARC_LEN * (1 - ratio);
+
+    el.tokenVal.textContent = (state.tokens || 0).toFixed(5);
+    el.powerVal.textContent = getTotalPower().toFixed(2);
+    el.balanceUsd.textContent = (state.usdBalance || 0).toFixed(4);
+
+    const changePct = state.totalMined > 0 ? Math.min(99, (state.tokens / state.totalMined) * 100) : 0;
+    el.balanceChange.innerHTML = `▲ +${changePct.toFixed(2)}% <span>${t('balance_today')}</span>`;
+
+    el.powerBar.style.width = Math.min(100, (getTotalPower() / 100) * 100) + '%';
+    el.tokenBar.style.width = Math.min(100, Math.max(0, ratio * 100)) + '%';
+}
+
+/* =========================================================================
+   RENDER — AGENTS
+   ========================================================================= */
+function renderAgents() {
+    const list = document.getElementById('agentList');
+    const shop = document.getElementById('shopList');
+    document.getElementById('agentCountBadge').textContent = state.agents.length;
+
+    list.innerHTML = '';
+    if (state.agents.length === 0) {
+        list.innerHTML = `<div class="empty-state"><div class="icon">⬢</div><div class="title">${t('section_owned')}</div></div>`;
+    }
+    state.agents.forEach((agent, i) => {
+        const tier = TIERS[agent.tier] || TIERS.starter;
+        const power = agent.power || getAgentPower(agent);
+        const cost = getAgentUpgradeCost(agent);
+
+        const card = document.createElement('div');
+        card.className = 'agent-card';
+        card.style.setProperty('--tier-color', tier.color);
+        card.style.setProperty('--tier-color-alpha', tier.alpha);
+        card.innerHTML = `
+            <div class="agent-avatar">${tier.icon}</div>
+            <div class="agent-info">
+                <div class="agent-name">${tier.name} #${i+1} <span class="agent-level">Lv.${agent.level}</span></div>
+                <div class="agent-power"><strong>${power.toFixed(2)}</strong> TH/s</div>
+            </div>
+            <div class="agent-action">
+                <button class="btn btn-primary btn-sm" onclick="handleUpgradeAgent('${agent.id}')">↑ ${cost.toFixed(2)}</button>
+                <div class="cost">ASTRA</div>
+            </div>
+        `;
+        list.appendChild(card);
+    });
+
+    shop.innerHTML = '';
+    Object.entries(TIERS).forEach(([key, tier]) => {
+        if (key === 'starter') return;
+        const ok = state.tokens >= tier.cost;
+        const card = document.createElement('div');
+        card.className = 'shop-card' + (ok ? '' : ' locked');
+        card.style.setProperty('--tier-color', tier.color);
+        card.style.setProperty('--tier-color-alpha', tier.alpha);
+        card.innerHTML = `
+            <div class="agent-avatar" style="border-color:${tier.color}44">${tier.icon}</div>
+            <div class="shop-info">
+                <div class="shop-name">${tier.name}</div>
+                <div class="shop-desc">+${tier.basePower.toFixed(1)} TH/s</div>
+            </div>
+            <button class="btn ${ok ? 'btn-primary' : 'btn-secondary'} btn-sm" onclick="handleBuyAgent('${key}')" ${ok ? '' : 'disabled'}>
+                ${tier.cost} ◆
+            </button>
+        `;
+        shop.appendChild(card);
+    });
+}
+
+/* =========================================================================
+   RENDER — HISTORY
+   ========================================================================= */
+function renderHistory() {
+    const list = document.getElementById('historyList');
+    document.getElementById('historyCountBadge').textContent = state.history.length;
+
+    if (state.history.length === 0) {
+        list.innerHTML = `<div class="empty-state"><div class="icon">◷</div><div class="title">${t('no_transactions')}</div></div>`;
+        return;
+    }
+    list.innerHTML = '';
+    state.history.forEach((h, idx) => {
+        const it = document.createElement('div');
+        it.className = 'history-item';
+        it.style.animationDelay = (idx * 0.03) + 's';
+        let icon='', cls='', title='', amt='', amtCls='neutral';
+        if (h.type === 'sell') { icon='↑'; cls='sell'; title=t('modal_sell_title'); amt = `-${(h.amount||0).toFixed(4)} ◆`; amtCls='negative'; }
+        else if (h.type === 'upgrade') { icon='⚡'; cls='upgrade'; title = `Upgrade · Lv.${h.meta?.level || ''}`; amt = `-${(h.cost||0).toFixed(4)} ◆`; amtCls='negative'; }
+        else if (h.type === 'buy') { icon='⬢'; cls='buy'; title = `${h.meta?.tierName || 'Agent'}`; amt = `-${(h.cost||0).toFixed(4)} ◆`; amtCls='negative'; }
+        else if (h.type === 'cycle') { icon='◆'; cls='cycle'; title='Mining Cycle'; amt = `+${(h.amount||0).toFixed(4)} ◆`; amtCls='positive'; }
+        else if (h.type === 'ref') { icon='◉'; cls='ref'; title='Referral Bonus'; amt = `+${(h.amount||0).toFixed(4)} ◆`; amtCls='positive'; }
+        else if (h.type === 'deposit') { icon='+'; cls='deposit'; title='Deposit'; amt = `+$${(h.amount||0).toFixed(2)}`; amtCls='positive'; }
+        else if (h.type === 'withdraw') { icon='↓'; cls='withdraw'; title='Withdraw'; amt = `-$${(h.amount||0).toFixed(2)}`; amtCls='negative'; }
+
+        it.innerHTML = `
+            <div class="history-icon ${cls}">${icon}</div>
+            <div class="history-info">
+                <div class="history-title">${title}</div>
+                <div class="history-time">${timeAgo(h.time)}</div>
+            </div>
+            <div class="history-amount ${amtCls}">${amt}</div>
+        `;
+        list.appendChild(it);
+    });
+}
+
+/* =========================================================================
+   RENDER — REFERRAL
+   ========================================================================= */
+function renderReferral() {
+    const r = state.referral || {};
+    document.getElementById('refCode').textContent = r.code || '------';
+    document.getElementById('refLink').textContent = `https://t.me/${CONFIG.BOT_USERNAME}?start=ref_${r.code || ''}`;
+    document.getElementById('refInvited').textContent = r.invited || 0;
+    document.getElementById('refEarnings').textContent = (r.earnings || 0).toFixed(4);
+    const list = document.getElementById('refList');
+    const users = r.referredUsers || [];
+    if (users.length === 0) {
+        list.innerHTML = `<div class="empty-state" style="padding:22px 12px;"><div class="icon" style="font-size:32px;">👥</div><div class="title" style="font-size:11.5px;">${t('ref_empty')}</div></div>`;
+        return;
+    }
+    list.innerHTML = '';
+    users.forEach((u, i) => {
+        const it = document.createElement('div');
+        it.className = 'ref-list-item';
+        it.style.animationDelay = (i * 0.04) + 's';
+        it.innerHTML = `
+            <div class="avatar">${(u.name || '?')[0].toUpperCase()}</div>
+            <div class="name">${u.name}</div>
+            <div class="earn">+${(u.earned || 0).toFixed(4)} ◆</div>
+        `;
+        list.appendChild(it);
+    });
+}
+
+/* =========================================================================
+   RENDER — PROFILE
+   ========================================================================= */
+function renderProfile() {
+    const name = state.username || 'User';
+    document.getElementById('profileName').textContent = name;
+    document.getElementById('profileId').textContent = 'ID: ' + (state.userId || '—');
+    document.getElementById('profileAvatar').textContent = name[0].toUpperCase();
+    document.getElementById('profileUsdBalance').textContent = (state.usdBalance || 0).toFixed(4);
+    const pack = LOCALES[CURRENT_LANG] || LOCALES.en;
+    document.getElementById('currentLangName').textContent = pack._n;
+    document.getElementById('currentLangFlagSmall').textContent = pack._f;
+    document.getElementById('currentFlagDisplay').textContent = pack._f;
+    document.getElementById('profileLangBadge').textContent = CURRENT_LANG.toUpperCase();
+
+    const grid = document.getElementById('depositGrid');
+    grid.innerHTML = '';
+    depositTiers.forEach(tier => {
+        const div = document.createElement('div');
+        div.className = 'deposit-tier';
+        div.onclick = () => startDeposit(tier);
+        div.innerHTML = `
+            <div class="usd">$${tier.usd}</div>
+            <div class="stars">${t('deposit_stars', { stars: tier.stars })}</div>
+            <div class="tier-label">${t('pack_label')}</div>
+        `;
+        grid.appendChild(div);
+    });
+}
+
+/* =========================================================================
+   NAVIGATION
+   ========================================================================= */
+function showScreen(name) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + name).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.screen === name));
+    haptic.light();
+}
+
+/* =========================================================================
+   SELL TOKENS
+   ========================================================================= */
+function handleSell() {
+    haptic.medium();
+    if (state.tokens < serverConfig.MIN_SELL_ASTRA) {
+        haptic.error();
+        modal.show({
+            icon: '!', iconType: 'error', title: t('msg_insufficient'),
+            message: t('insufficient_msg', { min: serverConfig.MIN_SELL_ASTRA }),
+            buttons: [{ text: t('btn_ok'), type: 'confirm' }],
+        });
+        return;
+    }
+    const amount = state.tokens;
+    const gross = amount * serverConfig.TOKEN_TO_USD;
+    const fee = gross * serverConfig.SELL_FEE;
+    const net = gross - fee;
+
+    modal.show({
+        icon: '↑', title: t('modal_sell_title'),
+        message:
+            `${t('modal_sell_amount')}: <strong>${amount.toFixed(5)}</strong>\n` +
+            `${t('modal_sell_rate')}: <strong>100 Token = ${(100 * serverConfig.TOKEN_TO_USD).toFixed(2)} USD</strong>\n` +
+            `${t('modal_sell_fee')}: <strong>${(serverConfig.SELL_FEE*100).toFixed(0)}%</strong>\n\n` +
+            `${t('modal_sell_net')}: <strong>${net.toFixed(5)} USD</strong>`,
+        buttons: [
+            { text: t('btn_cancel'), type: 'cancel' },
+            { text: t('btn_confirm'), type: 'confirm', onClick: () => executeSell(amount) },
+        ],
+    });
+}
+
+async function executeSell(amount) {
+    try {
+        const res = await api.sellTokens(amount);
+        state = res.state;
+        renderDashboard(); renderAgents(); renderHistory(); renderProfile();
+        haptic.success();
+        spawnConfetti(35);
+        flashEl(el.balanceUsd);
+        modal.show({
+            icon: '✓', iconType: 'success', title: t('msg_sell_success'),
+            message: `<strong>${res.sold.toFixed(5)} ASTRA</strong> → <strong>${res.net.toFixed(5)} USD</strong>`,
+            buttons: [{ text: t('btn_ok'), type: 'confirm' }],
+        });
+    } catch (err) {
+        haptic.error();
+        const msg = err.message === 'INSUFFICIENT_TOKENS' ? t('msg_insufficient')
+                  : err.message === 'BELOW_MINIMUM' ? t('err_below_min')
+                  : err.message === 'RATE_LIMIT' ? t('msg_rate_limit')
+                  : t('msg_error');
+        showToast(msg);
+    }
+}
+
+/* =========================================================================
+   UPGRADE AGENT
+   ========================================================================= */
+function handleUpgradeAgent(agentId) {
+    haptic.medium();
+    const agent = state.agents.find(a => a.id === agentId);
+    if (!agent) return;
+    const cost = getAgentUpgradeCost(agent);
+    if (state.tokens < cost) {
+        haptic.error();
+        modal.show({
+            icon: '⚡', iconType: 'error', title: t('msg_insufficient'),
+            message: `${cost.toFixed(4)} ASTRA / ${state.tokens.toFixed(4)}`,
+            buttons: [{ text: t('btn_ok'), type: 'confirm' }],
+        });
+        return;
+    }
+    const tier = TIERS[agent.tier] || TIERS.starter;
+    modal.show({
+        icon: tier.icon, title: t('btn_upgrade'),
+        message: `${cost.toFixed(4)} ASTRA → Lv.${agent.level + 1}`,
+        buttons: [
+            { text: t('btn_cancel'), type: 'cancel' },
+            { text: t('btn_confirm'), type: 'confirm', onClick: () => executeAgentUpgrade(agentId) },
+        ],
+    });
+}
+
+async function executeAgentUpgrade(agentId) {
+    try {
+        const res = await api.upgrade(agentId);
+        state = res.state;
+        renderDashboard(); renderAgents(); renderHistory();
+        haptic.success();
+        spawnConfetti(15);
+        showToast(`Lv.${res.newLevel}`);
+    } catch (err) {
+        haptic.error();
+        showToast(t('msg_error'));
+    }
+}
+
+function handleQuickUpgrade() {
+    haptic.heavy();
+    if (state.agents.length === 0) return;
+    let cheapest = state.agents[0], cheapestCost = getAgentUpgradeCost(cheapest);
+    for (const a of state.agents) {
+        const c = getAgentUpgradeCost(a);
+        if (c < cheapestCost) { cheapest = a; cheapestCost = c; }
+    }
+    if (state.tokens < cheapestCost) {
+        haptic.error();
+        modal.show({
+            icon: '⚡', iconType: 'error', title: t('msg_insufficient'),
+            message: `${cheapestCost.toFixed(4)} ASTRA / ${state.tokens.toFixed(4)}`,
+            buttons: [
+                { text: t('btn_cancel'), type: 'cancel' },
+                { text: t('btn_ok'), type: 'confirm', onClick: () => showScreen('agents') },
+            ],
+        });
+        return;
+    }
+    executeAgentUpgrade(cheapest.id);
+}
+
+/* =========================================================================
+   BUY AGENT
+   ========================================================================= */
+function handleBuyAgent(tierKey) {
+    haptic.medium();
+    const t2 = TIERS[tierKey];
+    if (!t2 || state.tokens < t2.cost) { haptic.error(); showToast(t('msg_insufficient')); return; }
+    modal.show({
+        icon: t2.icon, title: t2.name,
+        message: `${t2.cost} ASTRA → +${t2.basePower.toFixed(1)} TH/s`,
+        buttons: [
+            { text: t('btn_cancel'), type: 'cancel' },
+            { text: t('btn_confirm'), type: 'confirm', onClick: () => executeBuyAgent(tierKey) },
+        ],
+    });
+}
+
+async function executeBuyAgent(tierKey) {
+    try {
+        const res = await api.buy(tierKey);
+        state = res.state;
+        renderDashboard(); renderAgents(); renderHistory();
+        haptic.success();
+        spawnConfetti(50);
+        modal.show({
+            icon: TIERS[tierKey].icon, iconType: 'success', title: t('msg_buy_success'),
+            message: `Total: <strong>${getTotalPower().toFixed(2)} TH/s</strong>`,
+            buttons: [{ text: t('btn_ok'), type: 'confirm' }],
+        });
+    } catch (err) {
+        haptic.error();
+        showToast(t('msg_error'));
+    }
+}
+
+/* =========================================================================
+   REFERRAL ACTIONS
+   ========================================================================= */
+function copyRefLink() {
+    const link = `https://t.me/${CONFIG.BOT_USERNAME}?start=ref_${state.referral.code}`;
+    haptic.light();
+    function fallback() {
+        const ta = document.createElement('textarea');
+        ta.value = link; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); } catch(e){}
+        document.body.removeChild(ta);
+    }
+    if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(link).then(()=>showToast(t('msg_copied'))).catch(()=>{fallback();showToast(t('msg_copied'))});
+    } else { fallback(); showToast(t('msg_copied')); }
+}
+function shareRefLink() {
+    haptic.medium();
+    const link = `https://t.me/${CONFIG.BOT_USERNAME}?start=ref_${state.referral.code}`;
+    const u = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent('Astra Mining')}`;
+    if (tg?.openTelegramLink) safeCall(()=>tg.openTelegramLink(u));
+    else window.open(u, '_blank');
+}
+
+/* =========================================================================
+   LANGUAGE PICKER
+   ========================================================================= */
+function openLanguagePicker() {
+    haptic.light();
+    const langs = Object.values(LOCALES).map(p => ({ code: p._code || Object.keys(LOCALES).find(k => LOCALES[k] === p), name: p._n, flag: p._f }));
+    const buttonsHtml = langs.map(l =>
+        `<div class="lang-item ${l.code === CURRENT_LANG ? 'active' : ''}" onclick="selectLanguage('${l.code}')">
+            <span class="flag-icon">${l.flag}</span>
+            <span class="lang-name">${l.name}</span>
+            ${l.code === CURRENT_LANG ? '<span class="check">✓</span>' : ''}
+        </div>`
+    ).join('');
+
+    modal.actions.innerHTML = '';
+    modal.actions.className = 'modal-actions single';
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'modal-btn cancel';
+    closeBtn.textContent = t('btn_cancel');
+    closeBtn.onclick = () => modal.hide();
+    modal.actions.appendChild(closeBtn);
+
+    modal.icon.textContent = '🌐';
+    modal.icon.className = 'modal-icon';
+    modal.title.textContent = t('lang_title');
+    modal.message.innerHTML = `<div style="font-size:11.5px;color:var(--text-muted);margin-bottom:4px;">${t('lang_subtitle')}</div><div class="lang-list">${buttonsHtml}</div>`;
+    requestAnimationFrame(() => modal.overlay.classList.add('show'));
+}
+
+async function selectLanguage(code) {
+    if (!LOCALES[code]) return;
+    haptic.medium();
+    CURRENT_LANG = code;
+    localStorage.setItem('astra_lang', code);
+    applyI18n();
+    modal.hide();
+    try { await api.setLang(code); } catch(e){}
+    showToast(LOCALES[code]._f + ' ' + LOCALES[code]._n);
+}
+
+/* =========================================================================
+   DEPOSIT (Telegram Stars)
+   ========================================================================= */
+function startDeposit(tier) {
+    haptic.medium();
+    if (!tg?.openInvoice) {
+        showToast('Only available in Telegram');
+        return;
+    }
+    modal.show({
+        icon: '★', title: t('deposit_title'),
+        message: `$${tier.usd} · ${t('deposit_stars', { stars: tier.stars })}`,
+        buttons: [
+            { text: t('btn_cancel'), type: 'cancel' },
+            { text: t('btn_confirm'), type: 'confirm', onClick: () => requestDepositInvoice(tier) },
+        ],
+    });
+}
+
+async function requestDepositInvoice(tier) {
+    try {
+        const data = await api.depositInvoice(tier.usd, tier.stars);
+        if (!data.ok || !data.invoiceLink) throw new Error('invoice_fail');
+
+        tg.openInvoice(data.invoiceLink, async (status) => {
+            if (status === 'paid') {
+                haptic.success();
+                spawnConfetti(60);
+                await refreshState();
+                modal.show({
+                    icon: '✓', iconType: 'success', title: t('deposit_success'),
+                    message: `+$${tier.usd.toFixed(2)}`,
+                    buttons: [{ text: t('btn_ok'), type: 'confirm' }],
+                });
+            } else if (status === 'cancelled') {
+                haptic.error();
+                showToast(t('btn_cancel'));
+            } else {
+                haptic.error();
+                showToast(t('msg_error'));
+            }
+        });
+    } catch (err) {
+        console.error(err);
+        showToast(t('msg_error'));
+    }
+}
+
+function openDeposit() {
+    showScreen('profile');
+    setTimeout(() => {
+        document.getElementById('depositGrid').scrollIntoView({ behavior:'smooth', block:'center' });
+    }, 200);
+}
+
+/* =========================================================================
+   WITHDRAW
+   ========================================================================= */
+function openWithdraw() {
+    haptic.medium();
+    const balance = state.usdBalance || 0;
+    const min = serverConfig.MIN_WITHDRAW_USD;
+    const fee = serverConfig.WITHDRAW_FEE;
+
+    if (balance < min) {
+        haptic.error();
+        modal.show({
+            icon: '↓', iconType: 'error', title: t('withdraw_title'),
+            message: t('withdraw_too_low', { min: min.toFixed(2) }) +
+                     `\n\n${t('withdraw_available', { amount: balance.toFixed(4) })}`,
+            buttons: [{ text: t('btn_ok'), type: 'confirm' }],
+        });
+        return;
+    }
+
+    const amount = balance;
+    const feeAmount = amount * fee;
+    const net = amount - feeAmount;
+
+    modal.show({
+        icon: '↓', title: t('withdraw_title'),
+        message:
+            `${t('withdraw_available', { amount: amount.toFixed(4) })}` +
+            `\n${t('modal_sell_fee')}: <strong>${(fee*100).toFixed(0)}%</strong>` +
+            `\n${t('modal_sell_net')}: <strong>${net.toFixed(4)} USD</strong>\n\n` +
+            `${t('min_withdraw_note', { min: min.toFixed(2) })}`,
+        buttons: [
+            { text: t('btn_cancel'), type: 'cancel' },
+            { text: t('btn_confirm'), type: 'confirm', onClick: () => executeWithdraw(amount) },
+        ],
+    });
+}
+
+async function executeWithdraw(amount) {
+    try {
+        const res = await api.withdraw(amount);
+        state = res.state;
+        renderDashboard(); renderProfile(); renderHistory();
+        haptic.success();
+        modal.show({
+            icon: '✓', iconType: 'success', title: t('withdraw_success'),
+            message: `${t('modal_sell_net')}: <strong>${res.net.toFixed(4)} USD</strong>`,
+            buttons: [{ text: t('btn_ok'), type: 'confirm' }],
+        });
+    } catch (err) {
+        haptic.error();
+        showToast(t('msg_error'));
+    }
+}
+
+/* =========================================================================
+   VISUAL TICK + SYNC
+   ========================================================================= */
+setInterval(() => {
+    if (state.remaining > 0) { state.remaining -= 1; renderDashboard(); }
+}, 1000);
+setInterval(() => refreshState(false), 30000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshState(false); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.overlay.classList.contains('show')) modal.hide(); });
+
+/* =========================================================================
+   INIT
+   ========================================================================= */
+(async () => {
+    const status = document.getElementById('loadingStatus');
+    const overlay = document.getElementById('loadingOverlay');
+
+    const storedLang = localStorage.getItem('astra_lang');
+    CURRENT_LANG = (storedLang && LOCALES[storedLang]) ? storedLang : 'en';
+    applyI18n();
+
+    status.textContent = t('loading_connecting');
+
+    if (!CONFIG.API_BASE || CONFIG.API_BASE.includes('YOUR_DOMAIN')) {
+        status.textContent = t('api_missing');
+        status.style.color = '#ff6b5b';
+        return;
+    }
+    if (!api.initData) {
+        status.textContent = t('offline_warn');
+        status.style.color = '#ff6b5b';
+    }
+
+    let ok = false;
+    for (let i = 0; i < 3 && !ok; i++) {
+        ok = await refreshState(false);
+        if (!ok) await new Promise(r => setTimeout(r, 800));
+    }
+
+    setTimeout(() => {
+        overlay.classList.add('hide');
+        setTimeout(() => overlay.remove(), 500);
+    }, ok ? 300 : 1500);
+
+    if (ok) {
+        haptic.light();
+        console.log('%c✦ Astra Mining v3.2.0', 'color:#d4af37;font-weight:bold');
+    } else {
+        showToast(t('msg_connection_error'));
+    }
+})();
+</script>
+</body>
+</html>
